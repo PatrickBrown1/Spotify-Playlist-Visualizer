@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as $ from "jquery";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
 import axios from 'axios';
@@ -53,86 +52,76 @@ class App extends Component {
 
   getUserInformation(token) {
     // Make a call using the token
-    $.ajax({
+    axios({
+      method: "GET",
       url: "https://api.spotify.com/v1/me",
-      type: "GET",
-      beforeSend: (xhr) => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      headers: {
+        "Authorization": "Bearer " + token,
       },
-      success: (data) => {
-        // Checks if the data is not empty
-        if (!data) {
-          this.setState({
-            no_user_data: true,
-          });
-          return;
-        }
-        //DOES GET IN HERE JUST FINE
-        //alert("eee");
+    }).then((data) => {
+      if (!data.data) {
         this.setState({
-          user_info: data,
-          no_user_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
+          no_user_data: true,
         });
-      },
+        return;
+      }
+      //DOES GET IN HERE JUST FINE
+      //alert("eee");
+      this.setState({
+        user_info: data.data,
+        no_user_data: false /* We need to "reset" the boolean, in case the
+                          user does not give F5 and has opened his Spotify. */,
+      });
     });
   }
-
   getPlaylistNames(token, sortOnlyOwned) {
     // Make a call using the token
-    $.ajax({
+    axios({
+      method: "GET",
       url: "https://api.spotify.com/v1/me/playlists",
-      type: "GET",
-      beforeSend: (xhr) => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      headers: {
+        "Authorization": "Bearer " + token,
       },
-      success: (data) => {
-        // Checks if the data is not empty
-        if (!data) {
-          this.setState({
-            no_playlist_data: true,
-          });
-          return;
-        }
-        this.setState({
-          playlist_paging_object: data,
-          playlists: data.items,
-          number_playlists: data.total,
-          no_playlist_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
-        });
-        sortOnlyOwned();
-      },
+    }).then((data) => {
+      if (!data.data) {
+        this.setState({ no_playlist_data: true });
+      }
+      this.setState({
+        playlist_paging_object: data.data,
+        playlists: data.data.items,
+        number_playlists: data.data.total,
+        no_playlist_data: false /* We need to "reset" the boolean, in case the
+                              user does not give F5 and has opened his Spotify. */,
+      });
+      this.removeNonOwnedPlaylists();
     });
   }
   handleNextPlaylistPage() {
     if (this.state.playlist_paging_object.next !== null) {
       this.setState({ playlist_page: this.state.playlist_page + 1 });
       let next_page_call = this.state.playlist_paging_object.next;
-      $.ajax({
+      axios({
+        method: "GET",
         url: next_page_call,
-        type: "GET",
-        beforeSend: (xhr) => {
-          xhr.setRequestHeader("Authorization", "Bearer " + this.state.token);
+        headers: {
+          "Authorization": "Bearer " + this.state.token,
         },
-        success: (data) => {
-          // Checks if the data is not empty
-          if (!data) {
-            this.setState({
-              no_playlist_data: true,
-            });
-            return;
-          }
-
+      }).then(data => {
+        if (!data.data) {
           this.setState({
-            playlist_paging_object: data,
-            playlists: data.items,
-            no_playlist_data: false /* We need to "reset" the boolean, in case the
-                              user does not give F5 and has opened his Spotify. */,
+            no_playlist_data: true,
           });
+          return;
+        }
 
-          this.removeNonOwnedPlaylists();
-        },
+        this.setState({
+          playlist_paging_object: data.data,
+          playlists: data.data.items,
+          no_playlist_data: false /* We need to "reset" the boolean, in case the
+                            user does not give F5 and has opened his Spotify. */,
+        });
+
+        this.removeNonOwnedPlaylists();
       });
     }
   }
@@ -140,29 +129,27 @@ class App extends Component {
     if (this.state.playlist_paging_object.previous !== null) {
       this.setState({ playlist_page: this.state.playlist_page - 1 });
       let prev_page_call = this.state.playlist_paging_object.previous;
-      $.ajax({
+      axios({
+        method: "GET",
         url: prev_page_call,
-        type: "GET",
-        beforeSend: (xhr) => {
-          xhr.setRequestHeader("Authorization", "Bearer " + this.state.token);
+        headers: {
+          "Authorization": "Bearer " + this.state.token
         },
-        success: (data) => {
-          // Checks if the data is not empty
-          if (!data) {
-            this.setState({
-              no_playlist_data: true,
-            });
-            return;
-          }
-
+      }).then( data => {
+        if (!data.data) {
           this.setState({
-            playlist_paging_object: data,
-            playlists: data.items,
-            no_playlist_data: false /* We need to "reset" the boolean, in case the
-                              user does not give F5 and has opened his Spotify. */,
+            no_playlist_data: true,
           });
-          this.removeNonOwnedPlaylists();
-        },
+          return;
+        }
+
+        this.setState({
+          playlist_paging_object: data.data,
+          playlists: data.data.items,
+          no_playlist_data: false /* We need to "reset" the boolean, in case the
+                            user does not give F5 and has opened his Spotify. */,
+        });
+        this.removeNonOwnedPlaylists();
       });
     }
   }
