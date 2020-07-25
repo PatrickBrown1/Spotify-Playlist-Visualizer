@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as $ from "jquery";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
+import axios from 'axios';
 import Playlists from "./Playlists";
 import logo from "./logo.svg";
 import "./App.css";
