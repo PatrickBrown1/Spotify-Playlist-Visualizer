@@ -5,7 +5,8 @@ import axios from 'axios';
 import Playlists from "./Playlists";
 import logo from "./logo.svg";
 import "./App.css";
-
+import { getUserInformation, getPlaylistNames,
+         getNextPlaylistPage, getPrevPlaylistPage} from "./APIHandler.js";
 class App extends Component {
   constructor() {
     super();
@@ -22,15 +23,17 @@ class App extends Component {
       number_playlists: 0,
       playlist_page: 1,
     };
-    this.getUserInformation = this.getUserInformation.bind(this);
-    this.getPlaylistNames = this.getPlaylistNames.bind(this);
+    this.getUserInformation = getUserInformation.bind(this);
+    this.getPlaylistNames = getPlaylistNames.bind(this);
+    this.getNextPlaylistPage = getNextPlaylistPage.bind(this);
+    this.getPrevPlaylistPage = getPrevPlaylistPage.bind(this);
     this.removeNonOwnedPlaylists = this.removeNonOwnedPlaylists.bind(this);
     this.handleNextPlaylistPage = this.handleNextPlaylistPage.bind(this);
     this.handlePrevPlaylistPage = this.handlePrevPlaylistPage.bind(this);
     //this.tick = this.tick.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Set token
     let _token = hash.access_token;
 
@@ -40,8 +43,26 @@ class App extends Component {
         token: _token,
       });
 
-      this.getUserInformation(_token);
-      this.getPlaylistNames(_token, this.removeNonOwnedPlaylists);
+      // --------------------------- Get User Information --------------------------- \\
+      const userInfo = await getUserInformation(_token);
+      console.log("fetched user information..." + userInfo);
+      if(userInfo){
+        this.setState({ user_info: userInfo.data, no_user_data: false });
+      } else {
+        this.setState({ no_user_data: true });
+      }
+
+      // --------------------------- Get Playlist Information ----------------------- \\
+      const playlistInfo = await getPlaylistNames(_token);
+      if(playlistInfo){
+        this.setState({playlist_paging_object: playlistInfo.data,
+          playlists: playlistInfo.data.items,
+          number_playlists: playlistInfo.data.total,
+          no_playlist_data: false,
+        });
+      } else {
+        this.setState({ no_playlist_data: true, });
+      }
     }
   }
 
@@ -49,108 +70,41 @@ class App extends Component {
     // clear the interval to save resources
     clearInterval(this.interval);
   }
-
-  getUserInformation(token) {
-    // Make a call using the token
-    axios({
-      method: "GET",
-      url: "https://api.spotify.com/v1/me",
-      headers: {
-        "Authorization": "Bearer " + token,
-      },
-    }).then((data) => {
-      if (!data.data) {
-        this.setState({
-          no_user_data: true,
-        });
-        return;
-      }
-      //DOES GET IN HERE JUST FINE
-      //alert("eee");
-      this.setState({
-        user_info: data.data,
-        no_user_data: false /* We need to "reset" the boolean, in case the
-                          user does not give F5 and has opened his Spotify. */,
-      });
-    });
-  }
-  getPlaylistNames(token, sortOnlyOwned) {
-    // Make a call using the token
-    axios({
-      method: "GET",
-      url: "https://api.spotify.com/v1/me/playlists",
-      headers: {
-        "Authorization": "Bearer " + token,
-      },
-    }).then((data) => {
-      if (!data.data) {
-        this.setState({ no_playlist_data: true });
-      }
-      this.setState({
-        playlist_paging_object: data.data,
-        playlists: data.data.items,
-        number_playlists: data.data.total,
-        no_playlist_data: false /* We need to "reset" the boolean, in case the
-                              user does not give F5 and has opened his Spotify. */,
-      });
-      this.removeNonOwnedPlaylists();
-    });
-  }
-  handleNextPlaylistPage() {
+  
+  async handleNextPlaylistPage() {
     if (this.state.playlist_paging_object.next !== null) {
       this.setState({ playlist_page: this.state.playlist_page + 1 });
       let next_page_call = this.state.playlist_paging_object.next;
-      axios({
-        method: "GET",
-        url: next_page_call,
-        headers: {
-          "Authorization": "Bearer " + this.state.token,
-        },
-      }).then(data => {
-        if (!data.data) {
-          this.setState({
-            no_playlist_data: true,
-          });
-          return;
-        }
-
+      const data = await this.getNextPlaylistPage(this.state.token, next_page_call);
+      if (!data.data) {
+        this.setState({
+          no_playlist_data: true,
+        });
+      } else {
         this.setState({
           playlist_paging_object: data.data,
           playlists: data.data.items,
-          no_playlist_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
+          no_playlist_data: false ,
         });
-
-        this.removeNonOwnedPlaylists();
-      });
+      }
     }
   }
-  handlePrevPlaylistPage() {
+  async handlePrevPlaylistPage() {
     if (this.state.playlist_paging_object.previous !== null) {
       this.setState({ playlist_page: this.state.playlist_page - 1 });
       let prev_page_call = this.state.playlist_paging_object.previous;
-      axios({
-        method: "GET",
-        url: prev_page_call,
-        headers: {
-          "Authorization": "Bearer " + this.state.token
-        },
-      }).then( data => {
-        if (!data.data) {
-          this.setState({
-            no_playlist_data: true,
-          });
-          return;
-        }
-
+      const data = await this.getPrevPlaylistPage(this.state.token, prev_page_call);
+      if (!data.data) {
+        this.setState({
+          no_playlist_data: true,
+        });
+      } else {
         this.setState({
           playlist_paging_object: data.data,
           playlists: data.data.items,
-          no_playlist_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
+          no_playlist_data: false ,
         });
-        this.removeNonOwnedPlaylists();
-      });
+      }
     }
   }
   removeNonOwnedPlaylists() {
