@@ -18,7 +18,6 @@ class App extends Component {
       },
       no_user_data: true,
       no_playlist_data: true,
-      playlist_paging_object: null,
       playlists: null,
       number_playlists: 0,
       playlist_page: 1,
@@ -53,16 +52,21 @@ class App extends Component {
       }
 
       // --------------------------- Get Playlist Information ----------------------- \\
-      const playlistInfo = await getPlaylistNames(_token);
-      if(playlistInfo){
-        this.setState({playlist_paging_object: playlistInfo.data,
-          playlists: playlistInfo.data.items,
-          number_playlists: playlistInfo.data.total,
+      console.log("Fetching playlist data");
+      const playlists_data = await getPlaylistNames(_token);
+      console.log("done fetching playlists");
+      if(playlists_data.length != null){
+        this.setState({
+          playlists: playlists_data,
+          number_playlists: playlists_data.length,
           no_playlist_data: false,
         });
       } else {
-        this.setState({ no_playlist_data: true, });
+        this.setState({ playlists: [],
+          number_playlists: 0,
+          no_playlist_data: true,});
       }
+      console.log(this.state.playlists);
     }
   }
 
@@ -71,41 +75,13 @@ class App extends Component {
     clearInterval(this.interval);
   }
   
-  async handleNextPlaylistPage() {
-    if (this.state.playlist_paging_object.next !== null) {
-      this.setState({ playlist_page: this.state.playlist_page + 1 });
-      let next_page_call = this.state.playlist_paging_object.next;
-      const data = await this.getNextPlaylistPage(this.state.token, next_page_call);
-      if (!data.data) {
-        this.setState({
-          no_playlist_data: true,
-        });
-      } else {
-        this.setState({
-          playlist_paging_object: data.data,
-          playlists: data.data.items,
-          no_playlist_data: false ,
-        });
-      }
-    }
+  handleNextPlaylistPage() {
+    if(this.state.playlist_page * 10 < this.state.number_playlists);
+      this.setState({playlist_page: this.state.playlist_page + 1});
   }
-  async handlePrevPlaylistPage() {
-    if (this.state.playlist_paging_object.previous !== null) {
-      this.setState({ playlist_page: this.state.playlist_page - 1 });
-      let prev_page_call = this.state.playlist_paging_object.previous;
-      const data = await this.getPrevPlaylistPage(this.state.token, prev_page_call);
-      if (!data.data) {
-        this.setState({
-          no_playlist_data: true,
-        });
-      } else {
-        this.setState({
-          playlist_paging_object: data.data,
-          playlists: data.data.items,
-          no_playlist_data: false ,
-        });
-      }
-    }
+  handlePrevPlaylistPage() {
+    if(this.state.playlist_page !== 1);
+      this.setState({playlist_page: this.state.playlist_page - 1});
   }
   removeNonOwnedPlaylists() {
     var owned_playlists = [];
@@ -141,11 +117,11 @@ class App extends Component {
             <div>
               <h1>Hello, {this.state.user_info.display_name}</h1>
               <h1>Playlists</h1>
-              <Playlists playlists={this.state.playlists} />
-              {this.state.playlist_paging_object.previous !== null && (
+              <Playlists playlists={this.state.playlists.slice((this.state.playlist_page-1)*10, (this.state.playlist_page-1)*10 + 10 )}/>
+              {this.state.playlist_page !== 1 && (
                 <button onClick={this.handlePrevPlaylistPage}>Prev</button>
               )}
-              {this.state.playlist_paging_object.next !== null && (
+              {this.state.playlist_page * 10 < this.state.number_playlists && (
                 <button onClick={this.handleNextPlaylistPage}>Next</button>
               )}
             </div>
