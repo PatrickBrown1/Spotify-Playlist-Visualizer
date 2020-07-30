@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import * as $ from "jquery";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
+import axios from 'axios';
 import Playlists from "./Playlists";
 import logo from "./logo.svg";
 import "./App.css";
-
+import { getUserInformation, getPlaylistNames,
+         getNextPlaylistPage, getPrevPlaylistPage} from "./APIHandler.js";
 class App extends Component {
   constructor() {
     super();
@@ -17,20 +18,21 @@ class App extends Component {
       },
       no_user_data: true,
       no_playlist_data: true,
-      playlist_paging_object: null,
       playlists: null,
       number_playlists: 0,
       playlist_page: 1,
     };
-    this.getUserInformation = this.getUserInformation.bind(this);
-    this.getPlaylistNames = this.getPlaylistNames.bind(this);
+    this.getUserInformation = getUserInformation.bind(this);
+    this.getPlaylistNames = getPlaylistNames.bind(this);
+    this.getNextPlaylistPage = getNextPlaylistPage.bind(this);
+    this.getPrevPlaylistPage = getPrevPlaylistPage.bind(this);
     this.removeNonOwnedPlaylists = this.removeNonOwnedPlaylists.bind(this);
     this.handleNextPlaylistPage = this.handleNextPlaylistPage.bind(this);
     this.handlePrevPlaylistPage = this.handlePrevPlaylistPage.bind(this);
     //this.tick = this.tick.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Set token
     let _token = hash.access_token;
 
@@ -40,8 +42,31 @@ class App extends Component {
         token: _token,
       });
 
-      this.getUserInformation(_token);
-      this.getPlaylistNames(_token, this.removeNonOwnedPlaylists);
+      // --------------------------- Get User Information --------------------------- \\
+      const userInfo = await getUserInformation(_token);
+      console.log("fetched user information..." + userInfo);
+      if(userInfo){
+        this.setState({ user_info: userInfo.data, no_user_data: false });
+      } else {
+        this.setState({ no_user_data: true });
+      }
+
+      // --------------------------- Get Playlist Information ----------------------- \\
+      console.log("Fetching playlist data");
+      const playlists_data = await getPlaylistNames(_token);
+      console.log("done fetching playlists");
+      if(playlists_data.length != null){
+        this.setState({
+          playlists: playlists_data,
+          number_playlists: playlists_data.length,
+          no_playlist_data: false,
+        });
+      } else {
+        this.setState({ playlists: [],
+          number_playlists: 0,
+          no_playlist_data: true,});
+      }
+      console.log(this.state.playlists);
     }
   }
 
@@ -49,121 +74,14 @@ class App extends Component {
     // clear the interval to save resources
     clearInterval(this.interval);
   }
-
-  getUserInformation(token) {
-    // Make a call using the token
-    $.ajax({
-      url: "https://api.spotify.com/v1/me",
-      type: "GET",
-      beforeSend: (xhr) => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
-      },
-      success: (data) => {
-        // Checks if the data is not empty
-        if (!data) {
-          this.setState({
-            no_user_data: true,
-          });
-          return;
-        }
-        //DOES GET IN HERE JUST FINE
-        //alert("eee");
-        this.setState({
-          user_info: data,
-          no_user_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
-        });
-      },
-    });
-  }
-
-  getPlaylistNames(token, sortOnlyOwned) {
-    // Make a call using the token
-    $.ajax({
-      url: "https://api.spotify.com/v1/me/playlists",
-      type: "GET",
-      beforeSend: (xhr) => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
-      },
-      success: (data) => {
-        // Checks if the data is not empty
-        if (!data) {
-          this.setState({
-            no_playlist_data: true,
-          });
-          return;
-        }
-        this.setState({
-          playlist_paging_object: data,
-          playlists: data.items,
-          number_playlists: data.total,
-          no_playlist_data: false /* We need to "reset" the boolean, in case the
-                            user does not give F5 and has opened his Spotify. */,
-        });
-        sortOnlyOwned();
-      },
-    });
-  }
+  
   handleNextPlaylistPage() {
-    if (this.state.playlist_paging_object.next !== null) {
-      this.setState({ playlist_page: this.state.playlist_page + 1 });
-      let next_page_call = this.state.playlist_paging_object.next;
-      $.ajax({
-        url: next_page_call,
-        type: "GET",
-        beforeSend: (xhr) => {
-          xhr.setRequestHeader("Authorization", "Bearer " + this.state.token);
-        },
-        success: (data) => {
-          // Checks if the data is not empty
-          if (!data) {
-            this.setState({
-              no_playlist_data: true,
-            });
-            return;
-          }
-
-          this.setState({
-            playlist_paging_object: data,
-            playlists: data.items,
-            no_playlist_data: false /* We need to "reset" the boolean, in case the
-                              user does not give F5 and has opened his Spotify. */,
-          });
-
-          this.removeNonOwnedPlaylists();
-        },
-      });
-    }
+    if(this.state.playlist_page * 10 < this.state.number_playlists);
+      this.setState({playlist_page: this.state.playlist_page + 1});
   }
   handlePrevPlaylistPage() {
-    if (this.state.playlist_paging_object.previous !== null) {
-      this.setState({ playlist_page: this.state.playlist_page - 1 });
-      let prev_page_call = this.state.playlist_paging_object.previous;
-      $.ajax({
-        url: prev_page_call,
-        type: "GET",
-        beforeSend: (xhr) => {
-          xhr.setRequestHeader("Authorization", "Bearer " + this.state.token);
-        },
-        success: (data) => {
-          // Checks if the data is not empty
-          if (!data) {
-            this.setState({
-              no_playlist_data: true,
-            });
-            return;
-          }
-
-          this.setState({
-            playlist_paging_object: data,
-            playlists: data.items,
-            no_playlist_data: false /* We need to "reset" the boolean, in case the
-                              user does not give F5 and has opened his Spotify. */,
-          });
-          this.removeNonOwnedPlaylists();
-        },
-      });
-    }
+    if(this.state.playlist_page !== 1);
+      this.setState({playlist_page: this.state.playlist_page - 1});
   }
   removeNonOwnedPlaylists() {
     var owned_playlists = [];
@@ -199,11 +117,11 @@ class App extends Component {
             <div>
               <h1>Hello, {this.state.user_info.display_name}</h1>
               <h1>Playlists</h1>
-              <Playlists playlists={this.state.playlists} />
-              {this.state.playlist_paging_object.previous !== null && (
+              <Playlists playlists={this.state.playlists.slice((this.state.playlist_page-1)*10, (this.state.playlist_page-1)*10 + 10 )}/>
+              {this.state.playlist_page !== 1 && (
                 <button onClick={this.handlePrevPlaylistPage}>Prev</button>
               )}
-              {this.state.playlist_paging_object.next !== null && (
+              {this.state.playlist_page * 10 < this.state.number_playlists && (
                 <button onClick={this.handleNextPlaylistPage}>Next</button>
               )}
             </div>
