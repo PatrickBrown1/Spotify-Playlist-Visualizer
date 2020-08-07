@@ -1,0 +1,29 @@
+.navbar {
+    position: absolute;
+    top: 3vh;
+    left: 5vw;
+    width: 90vw;
+    height: 7vh;
+    display: flex;
+    flex-direction: row;
+}
+h1 {
+    margin-right: auto;
+}
+.navlink {
+    display: flex;
+    width: 6vw;
+    background-color: white;
+    transition: opacity 0.2s;
+    opacity: 0.6;
+    align-items: center;
+    justify-content: center;
+}
+.navlink:hover{
+    transition: opacity 0.2s;
+    opacity: 0.9;
+}
+.navbar-icon {
+    height: 7vh;
+    padding-right: 2vw;
+}

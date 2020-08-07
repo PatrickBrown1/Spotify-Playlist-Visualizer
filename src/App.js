@@ -12,6 +12,8 @@ import HomePage from "./pages/HomePage.js";
 import DataPage from "./pages/DataPage.js";
 import AboutPage from "./pages/AboutPage.js";
 
+import NavBar from "./NavBar.js";
+
 class App extends Component {
   constructor() {
     super();
@@ -36,11 +38,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <nav>
-              <div className="navbar">
-                <Link className="navlink" to="/">Home</Link>
-                <Link className="navlink" to="/about">About</Link>
-                <Link className="navlink" to="/data">Data</Link>
-              </div>
+              <NavBar />
             </nav>
             <body>
               <Switch>
