@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+body {
+    
+}
+.background {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 120%;
+    top: -20%;
+    left: 0%;
+    z-index: -1;
+    background: url('hero-page-spotify-project.jpg') 0 0 repeat;
+    background-size: 120%;
+    
+    filter: blur(3px);
+}
+
+.title-header {
+    color: rgb(0, 0, 0);
+    position: relative;
+    margin: 3em 0em 0em 3.5em;
+    font-size: 3.5em;
+    font-family: 'Open Sans';
+    font-weight: 600;
+    text-decoration: underline;
+}
+.subtitle-header {
+    color: rgb(0, 0, 0);
+    position: relative;
+    margin: -.2em 0em 0em 4.9em;
+    font-size: 2.5em;
+    font-family: 'Open Sans';
+    font-weight: 400;
+}
