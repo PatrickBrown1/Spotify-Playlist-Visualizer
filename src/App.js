@@ -36,29 +36,25 @@ class App extends Component {
         <Router>
           <div className="App">
             <nav>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/about">About</Link>
-                </li>
-                <li>
-                  <Link to="/data">Data</Link>
-                </li>
-              </ul>
+              <div className="navbar">
+                <Link className="navlink" to="/">Home</Link>
+                <Link className="navlink" to="/about">About</Link>
+                <Link className="navlink" to="/data">Data</Link>
+              </div>
             </nav>
-            <Switch>
-              <Route path="/about">
-                <AboutPage />
-              </Route>
-              <Route path="/data">
-                <DataPage />
-              </Route>
-              <Route path="/">
-                <HomePage />
-              </Route>
-            </Switch>
+            <body>
+              <Switch>
+                <Route path="/about">
+                  <AboutPage />
+                </Route>
+                <Route path="/data">
+                  <DataPage />
+                </Route>
+                <Route path="/">
+                  <HomePage />
+                </Route>
+              </Switch>
+            </body>
           </div>
         </Router>
       </div>
