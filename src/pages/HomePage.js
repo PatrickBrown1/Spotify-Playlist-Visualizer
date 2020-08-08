@@ -29,7 +29,7 @@ export default class HomePage extends Component {
         <h1 className="title-header">Playlist Analyzer</h1>
         <h2 className="subtitle-header">Discover your music</h2>
         {!this.props.auth_token && (
-            <Button type="primary" href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+            <Button type="primary" className="main-button" href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
               "%20"
             )}&response_type=token&show_dialog=true`} >
               Login to Spotify

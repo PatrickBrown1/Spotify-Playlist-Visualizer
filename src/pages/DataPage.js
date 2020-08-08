@@ -110,7 +110,7 @@ export default class DataPage extends Component {
           {!this.state.token && (
             <div>
               <h1>You dont seem to be logged in to Spotify</h1>
-              <h3>Go back to the home page to log in</h2>
+              <h3>Go back to the home page to log in</h3>
               <Link to="/">
                 <Button type="primary">
                   Home

@@ -34,3 +34,26 @@ body {
     font-family: 'Open Sans';
     font-weight: 400;
 }
+.main-button {
+    position: relative;
+    left: 12.5vw;
+    top: 10vh;
+
+    color: black;
+
+    font-family: 'Open Sans';
+    font-weight: 800;
+    font-size: 2em;
+    text-decoration: none;
+
+    padding: 0.7em;
+    border: 2px solid black;
+    
+    border-radius: 1em;
+    
+}
+.main-button:hover{
+    transition: background-color 0.1s;
+    background-color: rgb(30 215 96);
+    color: black;
+}
