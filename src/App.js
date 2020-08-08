@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import axios from 'axios';
+import hash from "./hash";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,13 +19,14 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      
+      auth_token: null,
     };
-    
+    //If token is null then the user has not logged in
   }
 
   async componentDidMount() {
-    
+    let _token = hash.access_token;
+    this.setState({auth_token: _token});
   }
 
   componentWillUnmount() {
@@ -46,10 +48,10 @@ class App extends Component {
                   <AboutPage />
                 </Route>
                 <Route path="/data">
-                  <DataPage />
+                  <DataPage auth_token={this.state.auth_token}/>
                 </Route>
                 <Route path="/">
-                  <HomePage />
+                  <HomePage auth_token={this.state.auth_token} />
                 </Route>
               </Switch>
             </body>
