@@ -14,6 +14,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { Button } from "antd";
 
 export default class DataPage extends Component {
   constructor() {
@@ -107,18 +108,15 @@ export default class DataPage extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           {!this.state.token && (
-            <a
-              className="btn btn--loginApp-link"
-              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-                "%20"
-              )}&response_type=token&show_dialog=true`}
-            >
-              Login to Spotify
-            </a>
-          )}
-
-          {this.state.no_playlist_data && (
-            <p>You dont have any playlist data</p>
+            <div>
+              <h1>You dont seem to be logged in to Spotify</h1>
+              <h3>Go back to the home page to log in</h2>
+              <Link to="/">
+                <Button type="primary">
+                  Home
+                </Button>
+              </Link>
+            </div>
           )}
 
           {this.state.token && !this.state.no_playlist_data && (
