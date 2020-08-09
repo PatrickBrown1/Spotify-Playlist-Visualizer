@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
 import axios from 'axios';
-import Playlists from "../Playlists";
-import logo from "../logo.svg";
+import Playlists from "../Playlists.js";
+import Card from "../Card.js"
 import "../App.css";
+import "./DataPage.css";
 import { getUserInformation, getPlaylistNames,
          getNextPlaylistPage, getPrevPlaylistPage} from "../APIHandler.js";
 
@@ -106,7 +107,6 @@ export default class DataPage extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           {!this.state.token && (
             <div>
               <h1>You dont seem to be logged in to Spotify</h1>
@@ -120,9 +120,14 @@ export default class DataPage extends Component {
           )}
 
           {this.state.token && !this.state.no_playlist_data && (
-            <div>
+            <div className="data-page-main">
               <h1>Hello, {this.state.user_info.display_name}</h1>
               <h1>Playlists</h1>
+              <div className="card-container">
+                <Card playlistObject={this.state.playlists[0]}/>
+                <Card playlistObject={this.state.playlists[1]}/>
+                <Card playlistObject={this.state.playlists[2]}/>
+              </div>
               <Playlists playlists={this.state.playlists.slice((this.state.playlist_page-1)*10, (this.state.playlist_page-1)*10 + 10 )}/>
               {this.state.playlist_page !== 1 && (
                 <button onClick={this.handlePrevPlaylistPage}>Prev</button>

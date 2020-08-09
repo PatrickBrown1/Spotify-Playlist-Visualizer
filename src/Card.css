@@ -1,0 +1,27 @@
+.card {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    margin: 20px 20px 20px 40px;
+    background-color: white;
+    border: black 1px;
+    border-style: solid;
+}
+.image-container {
+    display: block;
+    background-color: blue;
+    width: 5em;
+    height: 5em;
+    margin: 3px;
+}
+.text-container {
+    display: block;
+    background-color: green;
+    width: 5em;
+    height: 5em; 
+    margin: 3px;
+}
+.album-image {
+    max-width: 100%;
+    max-height: 100%;
+}
