@@ -126,9 +126,9 @@ async function fetchAllPlaylists(token){
   console.log(all_playlists_array);
   return all_playlists_array;
 }
-export async function getNextPlaylistPage(token, next_page_call){
-  return fetchAxios(token, next_page_call);
-}
-export async function getPrevPlaylistPage(token, prev_page_call){
-  return fetchAxios(token, prev_page_call);
-}
+// export async function getNextPlaylistPage(token, next_page_call){
+//   return fetchAxios(token, next_page_call);
+// }
+// export async function getPrevPlaylistPage(token, prev_page_call){
+//   return fetchAxios(token, prev_page_call);
+// }

@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
 import axios from 'axios';
-import Playlists from "../Playlists.js";
 import Card from "../Card.js"
 import "../App.css";
 import "./DataPage.css";
-import { getUserInformation, getPlaylistNames,
-         getNextPlaylistPage, getPrevPlaylistPage} from "../APIHandler.js";
+import { getUserInformation, getPlaylistNames} from "../APIHandler.js";
 
 import {
   BrowserRouter as Router,
@@ -30,15 +28,11 @@ export default class DataPage extends Component {
       no_playlist_data: true,
       playlists: null,
       number_playlists: 0,
-      playlist_page: 1,
     };
     this.getUserInformation = getUserInformation.bind(this);
     this.getPlaylistNames = getPlaylistNames.bind(this);
-    this.getNextPlaylistPage = getNextPlaylistPage.bind(this);
-    this.getPrevPlaylistPage = getPrevPlaylistPage.bind(this);
     this.removeNonOwnedPlaylists = this.removeNonOwnedPlaylists.bind(this);
-    this.handleNextPlaylistPage = this.handleNextPlaylistPage.bind(this);
-    this.handlePrevPlaylistPage = this.handlePrevPlaylistPage.bind(this);
+    this.createPlaylistCards = this.createPlaylistCards.bind(this);
     //this.tick = this.tick.bind(this);
   }
 
@@ -84,15 +78,6 @@ export default class DataPage extends Component {
     // clear the interval to save resources
     clearInterval(this.interval);
   }
-  
-  handleNextPlaylistPage() {
-    if(this.state.playlist_page * 10 < this.state.number_playlists);
-      this.setState({playlist_page: this.state.playlist_page + 1});
-  }
-  handlePrevPlaylistPage() {
-    if(this.state.playlist_page !== 1);
-      this.setState({playlist_page: this.state.playlist_page - 1});
-  }
   removeNonOwnedPlaylists() {
     var owned_playlists = [];
     for (var i = 0; i < this.state.playlists.length; i++) {
@@ -102,6 +87,15 @@ export default class DataPage extends Component {
       }
     }
     this.setState({ playlists: owned_playlists });
+  }
+  createPlaylistCards(){
+    //this method is only called from the render method
+    //a precursor to the call is the existence of playlist data
+    //therefore this method should always have playlist data to work with
+    const cardList = this.state.playlists.map(playlistObj => (
+      <Card playlistObject={playlistObj} />
+    ));
+    return cardList;
   }
   render() {
     return (
@@ -124,17 +118,8 @@ export default class DataPage extends Component {
               <h1>Hello, {this.state.user_info.display_name}</h1>
               <h1>Playlists</h1>
               <div className="card-container">
-                <Card playlistObject={this.state.playlists[0]}/>
-                <Card playlistObject={this.state.playlists[1]}/>
-                <Card playlistObject={this.state.playlists[2]}/>
+                {this.createPlaylistCards()}
               </div>
-              <Playlists playlists={this.state.playlists.slice((this.state.playlist_page-1)*10, (this.state.playlist_page-1)*10 + 10 )}/>
-              {this.state.playlist_page !== 1 && (
-                <button onClick={this.handlePrevPlaylistPage}>Prev</button>
-              )}
-              {this.state.playlist_page * 10 < this.state.number_playlists && (
-                <button onClick={this.handleNextPlaylistPage}>Next</button>
-              )}
             </div>
           )}
         </header>

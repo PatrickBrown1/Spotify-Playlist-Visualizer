@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Card.css";
-import { configConsumerProps } from "antd/lib/config-provider";
 var Card = function(props) { 
     //obj.image returnms array of image objects
     const playlistName = props.playlistObject.name;
