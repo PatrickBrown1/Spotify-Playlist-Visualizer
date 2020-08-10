@@ -1,6 +1,8 @@
 .data-page-main {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-content: flex-start;
 }
 .card-container {
     display: flex;
@@ -12,4 +14,23 @@
     background-color: black;
     width: 80%;
     align-self: center;
+}
+.error-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background-color: #282c34;
+    min-height: 100vh;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+.header {
+    width: 100%;
+    text-align: center;
+    font-size: 6vmin;
+    padding: 20vh 0 5vh 0;
+    color: white;
 }

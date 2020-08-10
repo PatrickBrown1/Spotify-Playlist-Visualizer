@@ -3,7 +3,6 @@ import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
 import axios from 'axios';
 import Card from "../Card.js"
-import "../App.css";
 import "./DataPage.css";
 import { getUserInformation, getPlaylistNames} from "../APIHandler.js";
 
@@ -99,8 +98,8 @@ export default class DataPage extends Component {
   }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <div>
+        <header className="error-header">
           {!this.state.token && (
             <div>
               <h1>You dont seem to be logged in to Spotify</h1>
@@ -115,8 +114,7 @@ export default class DataPage extends Component {
 
           {this.state.token && !this.state.no_playlist_data && (
             <div className="data-page-main">
-              <h1>Hello, {this.state.user_info.display_name}</h1>
-              <h1>Playlists</h1>
+              <h1 className="header"> Hello, {this.state.user_info.display_name}</h1>
               <div className="card-container">
                 {this.createPlaylistCards()}
               </div>
