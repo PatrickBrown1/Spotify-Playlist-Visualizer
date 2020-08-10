@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
 import axios from 'axios';
-import Card from "../Card.js"
+import PlaylistCard from "../PlaylistCard.js"
 import "./DataPage.css";
 import { getUserInformation, getPlaylistNames} from "../APIHandler.js";
 
@@ -92,7 +92,7 @@ export default class DataPage extends Component {
     //a precursor to the call is the existence of playlist data
     //therefore this method should always have playlist data to work with
     const cardList = this.state.playlists.map(playlistObj => (
-      <Card playlistObject={playlistObj} />
+      <PlaylistCard playlistObject={playlistObj} />
     ));
     return cardList;
   }
@@ -114,7 +114,11 @@ export default class DataPage extends Component {
 
           {this.state.token && !this.state.no_playlist_data && (
             <div className="data-page-main">
-              <h1 className="header"> Hello, {this.state.user_info.display_name}</h1>
+              <div className="header">
+                <h2> Hello, {this.state.user_info.display_name}</h2>
+                <h3> Here are your playlists</h3>
+              </div>
+              
               <div className="card-container">
                 {this.createPlaylistCards()}
               </div>
