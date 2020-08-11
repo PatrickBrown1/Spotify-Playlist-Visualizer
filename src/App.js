@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
-import axios from 'axios';
+import axios from "axios";
 import hash from "./hash";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import HomePage from "./pages/HomePage.js";
 import DataPage from "./pages/DataPage.js";
@@ -26,14 +21,11 @@ class App extends Component {
 
   async componentDidMount() {
     let _token = hash.access_token;
-    this.setState({auth_token: _token});
+    this.setState({ auth_token: _token });
   }
 
-  componentWillUnmount() {
-    
-  }
-  
-  
+  componentWillUnmount() {}
+
   render() {
     return (
       <div>
@@ -48,7 +40,7 @@ class App extends Component {
                   <AboutPage />
                 </Route>
                 <Route path="/data">
-                  <DataPage auth_token={this.state.auth_token}/>
+                  <DataPage auth_token={this.state.auth_token} />
                 </Route>
                 <Route path="/">
                   <HomePage auth_token={this.state.auth_token} />
