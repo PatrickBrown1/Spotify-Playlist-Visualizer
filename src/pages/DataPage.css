@@ -34,7 +34,17 @@
   padding: 20vh 0 5vh 0;
   color: white;
 }
-.opacitygrayscale {
-  opacity: 0.4;
-  filter: grayscale(70%);
+.above-playlist-container {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    justify-content: flex-start;
+    width: 80%;
+    height: 2em;
+    align-items: center;
+}
+.filter-buttons {
+}
+.playlist-number{
+    margin-left: auto;
 }

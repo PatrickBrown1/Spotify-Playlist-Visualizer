@@ -27,9 +27,9 @@ export default class DataPage extends Component {
     this.getPlaylistNames = getPlaylistNames.bind(this);
     this.removeNonOwnedPlaylists = this.removeNonOwnedPlaylists.bind(this);
     this.createPlaylistCards = this.createPlaylistCards.bind(this);
-    this.updatePlaylistCards = this.updatePlaylistCards.bind(this);
     this.handleCardClick = this.handleCardClick.bind(this);
-    //this.tick = this.tick.bind(this);
+    this.selectAllPlaylists = this.selectAllPlaylists.bind(this);
+    this.deselectAllPlaylists = this.deselectAllPlaylists.bind(this);
   }
 
   async componentDidMount() {
@@ -57,7 +57,7 @@ export default class DataPage extends Component {
       console.log("done fetching playlists");
       if (playlists_data.length != null) {
         //add clicked field to each object, default as true
-        playlists_data.forEach(playlist => playlist.toBeUsed=true);
+        playlists_data.forEach((playlist) => (playlist.toBeUsed = true));
         this.setState({
           playlists: playlists_data,
           number_playlists: playlists_data.length,
@@ -73,7 +73,7 @@ export default class DataPage extends Component {
       console.log(this.state.playlists);
     }
   }
-  
+
   componentWillUnmount() {
     // clear the interval to save resources
     clearInterval(this.interval);
@@ -93,24 +93,51 @@ export default class DataPage extends Component {
     //a precursor to the call is the existence of playlist data
     //therefore this method should always have playlist data to work with
     const cardList = this.state.playlists.map((playlistObj) => (
-      <PlaylistCard playlistObject={playlistObj} toBeUsed={playlistObj.toBeUsed} handleCardClick={this.handleCardClick}/>
+      <PlaylistCard
+        playlistObject={playlistObj}
+        toBeUsed={playlistObj.toBeUsed}
+        handleCardClick={this.handleCardClick}
+      />
     ));
     return cardList;
   }
-  updatePlaylistCards() {}
-  handleCardClick(id){
+  handleCardClick(id) {
     //find playlist with the correct id
     var tempPlaylists = this.state.playlists;
-    tempPlaylists.forEach(playlist => {
-      if(playlist.id === id){
+    tempPlaylists.forEach((playlist) => {
+      if (playlist.id === id) {
         //flip clicked boolean
-        
+
         //console.log("Playlist with id " + id + " was " + playlist.toBeUsed);
         playlist.toBeUsed = !playlist.toBeUsed;
         //console.log("Playlist with id " + id + " is now " + playlist.toBeUsed);
       }
     });
-    this.setState({playlists: tempPlaylists});
+    this.setState({ playlists: tempPlaylists });
+  }
+
+  //The following two functions are only called if the playlist data is not null
+  //based on the conditional rendering in the render function
+  selectAllPlaylists() {
+    //get playlist array from state and put into temp array
+    var tempPlaylists = this.state.playlists;
+    //iterate through all playlists set toBeUsed to true
+    tempPlaylists.forEach((playlist) => {
+      playlist.toBeUsed = true;
+    });
+    //set state to new playlist array
+    this.setState({ playlists: tempPlaylists });
+  }
+  deselectAllPlaylists() {
+    //get playlist array from state and put into temp array
+    var tempPlaylists = this.state.playlists;
+    console.log(tempPlaylists);
+    //iterate through all playlists set toBeUsed to false
+    tempPlaylists.forEach((playlist) => {
+      playlist.toBeUsed = false;
+    });
+    //set state to new playlist array
+    this.setState({ playlists: tempPlaylists });
   }
   render() {
     var cardList = null;
@@ -137,7 +164,11 @@ export default class DataPage extends Component {
                 <h2> Hello, {this.state.user_info.display_name}</h2>
                 <h3> Here are your playlists</h3>
               </div>
-
+              <div className="above-playlist-container">
+                <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
+                <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
+                <h5 className="playlist-number">Total Playlists: {this.state.number_playlists}</h5>
+              </div>
               <div className="card-container">{cardList}</div>
             </div>
           )}

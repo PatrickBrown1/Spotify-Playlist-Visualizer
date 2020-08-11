@@ -53,3 +53,8 @@
     border: rgb(30, 30, 30) 1px;
     border-style: solid;
 }
+.opacitygrayscale {
+    opacity: 0.4;
+    filter: grayscale(70%);
+  }
+  
