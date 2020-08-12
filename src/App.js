@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import HomePage from "./pages/HomePage.js";
 import DataPage from "./pages/DataPage.js";
 import AboutPage from "./pages/AboutPage.js";
+import AnalysisPage from "./pages/AnalysisPage.js";
 
 import NavBar from "./NavBar.js";
 

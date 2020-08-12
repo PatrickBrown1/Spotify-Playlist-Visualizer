@@ -8,6 +8,7 @@ import { getUserInformation, getPlaylistNames } from "../APIHandler.js";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Button } from "antd";
+import AnalysisPage from "./AnalysisPage.js";
 
 export default class DataPage extends Component {
   constructor() {
@@ -22,6 +23,7 @@ export default class DataPage extends Component {
       no_playlist_data: true,
       playlists: null,
       number_playlists: 0,
+      showAnalysis: false,
     };
     this.getUserInformation = getUserInformation.bind(this);
     this.getPlaylistNames = getPlaylistNames.bind(this);
@@ -30,6 +32,8 @@ export default class DataPage extends Component {
     this.handleCardClick = this.handleCardClick.bind(this);
     this.selectAllPlaylists = this.selectAllPlaylists.bind(this);
     this.deselectAllPlaylists = this.deselectAllPlaylists.bind(this);
+    this.handleGoClick = this.handleGoClick.bind(this);
+    this.filterPlaylists = this.filterPlaylists.bind(this);
   }
 
   async componentDidMount() {
@@ -139,6 +143,12 @@ export default class DataPage extends Component {
     //set state to new playlist array
     this.setState({ playlists: tempPlaylists });
   }
+  handleGoClick(){
+    this.setState({showAnalysis: true});
+  }
+  filterPlaylists(){
+    return [];
+  }
   render() {
     var cardList = null;
     if (!this.state.no_playlist_data) {
@@ -147,32 +157,40 @@ export default class DataPage extends Component {
     //console.log("rendering datapage");
     return (
       <div>
-        <header className="error-header">
-          {!this.state.token && (
-            <div>
-              <h1>You dont seem to be logged in to Spotify</h1>
-              <h3>Go back to the home page to log in</h3>
-              <Link to="/">
-                <Button type="primary">Home</Button>
-              </Link>
-            </div>
-          )}
-
-          {this.state.token && !this.state.no_playlist_data && (
-            <div className="data-page-main">
-              <div className="header">
-                <h2> Hello, {this.state.user_info.display_name}</h2>
-                <h3> Here are your playlists</h3>
+        {!this.state.token && (
+          <div className="error-header">
+              <div>
+                <h1>You dont seem to be logged in to Spotify</h1>
+                <h3>Go back to the home page to log in</h3>
+                <Link to="/">
+                  <Button type="primary">Home</Button>
+                </Link>
               </div>
-              <div className="above-playlist-container">
-                <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
-                <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
-                <h5 className="playlist-number">Total Playlists: {this.state.number_playlists}</h5>
-              </div>
-              <div className="card-container">{cardList}</div>
+            
+          </div>
+        )}
+        {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
+          <div className="data-page-main">
+            <div className="header">
+              <h2> Hello, {this.state.user_info.display_name}</h2>
+              <h3> Here are your playlists</h3>
             </div>
-          )}
-        </header>
+            <div className="above-playlist-container">
+              <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
+              <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
+              <h5 className="playlist-number">Total Playlists: {this.state.number_playlists}</h5>
+            </div>
+            <div className="card-container">{cardList}</div>
+            <div className="footer">
+              <Button className="footer-button" type="primary" onClick={() => this.handleGoClick()}>Go</Button>
+            </div>
+          </div>
+        )}
+        {this.state.showAnalysis && this.state.token && (
+          <div className="data-page-main">
+            <AnalysisPage filteredPlaylists={this.filterPlaylists()}/>
+          </div>
+        )}
       </div>
     );
   }
