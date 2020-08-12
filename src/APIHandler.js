@@ -126,9 +126,77 @@ async function fetchAllPlaylists(token){
   console.log(all_playlists_array);
   return all_playlists_array;
 }
+export async function getAllSongs(token, first_page){
+  console.log("fetching songs");
+  var all_songs_playlist = [];
+  var current_page = first_page;
+  var call = 1;
+  while(current_page != null){
+    //make api call
+    let data = await axios({
+      method: "GET",
+      url: current_page,
+      headers: {
+        "Authorization": "Bearer " + token,
+      },
+    }).then((data) => {
+      var paging_object = data.data;
+      current_page = paging_object.next;
+      var current_call_songs = paging_object.items;
+      call++;
+      //the paging object items contains an array of song objects, need to parse into the track object
+      var i;
+      for(i = 0; i < current_call_songs.length; i++){
+        all_songs_playlist.push(current_call_songs[i].track);
+      }
+     
+    }).catch((error) => {
+      //this is taken from: https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
+      // Error 😨
+      //need to break the loop
+      if (error.response) {
+          /*
+           * The request was made and the server responded with a
+           * status code that falls out of the range of 2xx
+           */
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          if(error.response.status == 429){
+            console.log("429 error... waiting");
+            console.log("headers: " + error.response.headers);
+            var timeToWait = parseInt(error.response.headers["retry-after"]);
+            console.log("waiting... " + timeToWait + "s");
+            this.timeout(timeToWait*1000+1);
+          }
+          else{
+            current_page = null;
+          }
+      } else if (error.request) {
+          /*
+           * The request was made but no response was received, `error.request`
+           * is an instance of XMLHttpRequest in the browser and an instance
+           * of http.ClientRequest in Node.js
+           */
+          
+        current_page = null;
+          console.log(error.request);
+      } else {
+          // Something happened in setting up the request and triggered an Error 
+          current_page = null;
+          console.log('Error', error.message);
+      }
+      console.log(error);
+    });
+  }
+  return all_songs_playlist;
+}
 // export async function getNextPlaylistPage(token, next_page_call){
 //   return fetchAxios(token, next_page_call);
 // }
 // export async function getPrevPlaylistPage(token, prev_page_call){
 //   return fetchAxios(token, prev_page_call);
 // }
+function timeout(ms) { //pass a time in milliseconds to this function
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

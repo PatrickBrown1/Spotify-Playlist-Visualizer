@@ -146,8 +146,15 @@ export default class DataPage extends Component {
   handleGoClick(){
     this.setState({showAnalysis: true});
   }
+  //Iterates through all playlists, returns array of playlists that have been selected
   filterPlaylists(){
-    return [];
+    var filteredArray = [];
+    this.state.playlists.forEach(playlist => {
+      if(playlist.toBeUsed == true){
+        filteredArray.push(playlist);
+      }
+    });
+    return filteredArray;
   }
   render() {
     var cardList = null;
@@ -188,7 +195,7 @@ export default class DataPage extends Component {
         )}
         {this.state.showAnalysis && this.state.token && (
           <div className="data-page-main">
-            <AnalysisPage filteredPlaylists={this.filterPlaylists()}/>
+            <AnalysisPage filteredPlaylists={this.filterPlaylists()} token={this.state.token}/>
           </div>
         )}
       </div>
