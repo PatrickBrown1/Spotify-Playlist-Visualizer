@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router";
 import { getAllSongs } from "../APIHandler.js";
+import { VictoryPie } from "victory";
+
 export default class AnalysisPage extends Component {
   constructor() {
     super();
@@ -10,13 +12,13 @@ export default class AnalysisPage extends Component {
     this.getAllSongs = getAllSongs.bind(this);
     this.createSongArray = this.createSongArray.bind(this);
     this.calculateMostPopularGenre = this.calculateMostPopularGenre.bind(this);
+    this.createArtistToSongMap = this.createArtistToSongMap.bind(this);
+    this.popularArtistPieChart = this.popularArtistPieChart.bind(this);
   }
   async componentDidMount() {
     //start all analysis functions here
-    console.log("filteredPlaylists: ");
-    console.log(this.props.filteredPlaylists);
     const allSongs = await this.createSongArray(this.props.filteredPlaylists);
-    console.log(allSongs);
+    this.setState({artistToSongMap: this.createArtistToSongMap(allSongs)});
   }
   componentWillUnmount() {}
   async createSongArray(playlists) {
@@ -44,6 +46,60 @@ export default class AnalysisPage extends Component {
     }
     return allSongsArray;
   }
+  createArtistToSongMap(songArray){
+    var artistDictionary = {};
+    var i = 0;
+    songArray.forEach((song) => {
+      //grab the genre
+      if(song === null){
+        console.log("Null Song @ " + i);
+      }
+      else{
+        var artistsList = song.artists; //list of artists on current song
+        
+        //iterate through each artist, adding this song to their array
+        artistsList.forEach((artistObject) => {
+          //if the artist doesnt exist already, add them to the dictionary
+          if(artistDictionary[artistObject.name] === undefined){
+            //console.log("First time artist, " + artistObject.name);
+            artistDictionary[artistObject.name] = [song];
+          }
+          //else, the artist already exists. Pop the array, add the new song, update
+          //the dictionary
+          else{
+            var artistSongArray = artistDictionary[artistObject.name];
+            if(!artistSongArray.some(e => e.id === song.id)){
+              //no element in artistSongArray has the same id as the current song
+              artistSongArray.push(song);
+              artistDictionary[artistObject.name] = artistSongArray;
+            }
+            else{
+              //console.log(song.name + " tried to add twice");
+            }
+          }
+        });
+      }
+      i++;
+    });
+    console.log(artistDictionary);
+    return artistDictionary;
+  }
+  popularArtistPieChart(){
+    var data = [];
+    var artistToSongMapVar = this.state.artistToSongMap;
+    console.log(artistToSongMapVar);
+    
+    Object.keys(artistToSongMapVar).forEach(function (item) {
+      data.push({x: item, y: artistToSongMapVar[item].length});
+    });
+    return (
+      <div>
+        <VictoryPie 
+          data={data}
+        />
+      </div>
+    );
+  }
   calculateMostPopularGenre(songArray) {
     /*
         This function will calcualte the most popular genre given an array of songs
@@ -52,13 +108,29 @@ export default class AnalysisPage extends Component {
         key with the largest array. It will return an object containing the name of
         the genre (string), and the number of songs in the genre (int).
     */
+    /* 
+      Uh oh, the song doesn't have a genre specification, only the artist does.
+      I need to access the api for every artist, can get 50 artists per api call.
+      I can iterate through the songs, then create a dictionary with artist id as
+      the key and an array of their songs as the value. This could be useful for the
+      most popular artist tab as well.
+    */
     var genreDictionary = {};
     songArray.forEach((song) => {
       //grab the genre
+      console.log(song.name);
     });
   }
   render() {
-    console.log(this.props.filteredPlaylists);
-    return <div>analysis</div>;
+    return (
+      <div>
+        analysis
+        {this.state.artistToSongMap !== undefined && (
+          <div>
+            {this.popularArtistPieChart()}
+          </div>
+        )}
+      </div>
+    );
   }
 }
