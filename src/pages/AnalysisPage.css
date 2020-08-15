@@ -1,0 +1,16 @@
+.popularArtistChartContainer {
+    background-color: white;
+    width: 50vw;
+    height: 60vh;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
+    0 9px 28px 8px rgba(0, 0, 0, 0.15);
+    padding: 3em;
+    border: rgb(30, 30, 30) 2px;
+    border-style: solid;
+    border-radius: 10px;
+}
+.dataCardHeader {
+    color: black;
+    font-size: 40px;
+    line-height: 0%;
+}
