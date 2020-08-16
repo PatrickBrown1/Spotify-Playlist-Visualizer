@@ -130,6 +130,7 @@ export async function getAllSongs(token, first_page){
   console.log("fetching songs");
   var all_songs_playlist = [];
   var current_page = first_page;
+  console.log("get all songs, link: " + current_page);
   var call = 1;
   while(current_page != null){
     //make api call
@@ -144,7 +145,7 @@ export async function getAllSongs(token, first_page){
       current_page = paging_object.next;
       var current_call_songs = paging_object.items;
       call++;
-      //the paging object items contains an array of song objects, need to parse into the track object
+      //the paging object items contains an array of playlist tracj=k objects, need to parse into the track object
       var i;
       for(i = 0; i < current_call_songs.length; i++){
         all_songs_playlist.push(current_call_songs[i].track);
@@ -189,7 +190,92 @@ export async function getAllSongs(token, first_page){
       console.log(error);
     });
   }
+  console.log("ALL SONG PLAYLIST");
+  console.log(all_songs_playlist);
   return all_songs_playlist;
+}
+export async function getSongObjects(token, songArray){
+  //need to parse the array into comma separated lists of max length 100 songs,
+  console.log("GETTING SONG OBJECTS");
+  var song_object_list = [];
+  var call_link = "https://api.spotify.com/v1/audio-features";
+  var songs_left = true;
+  while(songs_left == true){
+    //create song object call link
+    var id_list = "";
+    var i = 0;
+    while(songArray.length > 0 && i < 100){
+      if(i != 0){ //to ensure the last one doesn't have a comma, we put commas at the front
+        id_list += ",";
+      }
+      id_list += songArray.pop().id;
+      i++;
+    }
+    //console.log("i: " + i);
+    if(songArray.length === 0){
+      songs_left = false;
+    }
+    //console.log("COMMA LIST: " + id_list);
+
+    //now that we have created the link, we need to call the api with that link
+    let data = await axios({
+      method: "GET",
+      url: call_link,
+      params: {
+        ids: id_list,
+      },
+      headers: {
+        "Authorization": "Bearer " + token,
+      },
+    }).then((data) => {
+      var features = data.data.audio_features;
+      //console.log("FEATURES");
+      //console.log(features);
+      features.forEach(songObj => {song_object_list.push({id: songObj.id, song_analysis: songObj})});
+    }).catch((error) => {
+      //this is taken from: https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
+      // Error 😨
+      //need to break the loop
+      if (error.response) {
+          /*
+           * The request was made and the server responded with a
+           * status code that falls out of the range of 2xx
+           */
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          if(error.response.status == 429){
+            console.log("429 error... waiting");
+            console.log("headers: " + error.response.headers);
+            var timeToWait = parseInt(error.response.headers["retry-after"]);
+            console.log("waiting... " + timeToWait + "s");
+            this.timeout(timeToWait*1000+1);
+          }
+          else{
+            songs_left = false;
+          }
+      } else if (error.request) {
+          /*
+           * The request was made but no response was received, `error.request`
+           * is an instance of XMLHttpRequest in the browser and an instance
+           * of http.ClientRequest in Node.js
+           */
+          
+          songs_left = false;
+          console.log(error.request);
+      } else {
+          // Something happened in setting up the request and triggered an Error 
+            songs_left = false;
+          console.log('Error', error.message);
+      }
+      console.log(error);
+    });
+
+  }
+  //console.log("ALL SONG OBJECT PLAYLIST");
+  //console.log(song_object_list);
+  console.log("---------------------------------------");
+  return song_object_list;
 }
 // export async function getNextPlaylistPage(token, next_page_call){
 //   return fetchAxios(token, next_page_call);

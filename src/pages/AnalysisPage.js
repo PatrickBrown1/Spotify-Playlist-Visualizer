@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router";
-import { getAllSongs } from "../APIHandler.js";
+import { getAllSongs, getSongObjects } from "../APIHandler.js";
 import { VictoryPie, VictoryLegend } from "victory";
 import "./AnalysisPage.css";
+import SongGraph from "../SongGraph.js"
 
 export default class AnalysisPage extends Component {
   constructor() {
@@ -11,15 +12,24 @@ export default class AnalysisPage extends Component {
     //filtered list of playlists will be passed into props as
     //filteredPlaylists
     this.getAllSongs = getAllSongs.bind(this);
+    this.getSongObjects = getSongObjects.bind(this);
     this.createSongArray = this.createSongArray.bind(this);
     this.calculateMostPopularGenre = this.calculateMostPopularGenre.bind(this);
     this.createArtistToSongMap = this.createArtistToSongMap.bind(this);
     this.popularArtistPieChart = this.popularArtistPieChart.bind(this);
+    this.createAnalysisArray = this.createAnalysisArray.bind(this);
   }
   async componentDidMount() {
     //start all analysis functions here
-    const allSongs = await this.createSongArray(this.props.filteredPlaylists);
-    this.setState({artistToSongMap: this.createArtistToSongMap(allSongs)});
+    var allSongs = await this.createSongArray(this.props.filteredPlaylists);
+    var musicAnalysisArray = await this.createAnalysisArray(allSongs.slice());
+    musicAnalysisArray.forEach(songObj => {
+      allSongs.find(x => x.id === songObj.id)["song_analysis"] 
+        = songObj.song_analysis;
+    });
+    console.log(allSongs);
+    this.setState({artistToSongMap: this.createArtistToSongMap(allSongs),
+                   allSongsArray: allSongs});
   }
   componentWillUnmount() {}
   async createSongArray(playlists) {
@@ -41,11 +51,14 @@ export default class AnalysisPage extends Component {
         const callURL = playlist.tracks.href;
         //console.log("current call url: " + callURL);
         var currPlaylistSongs = await getAllSongs(this.props.token, callURL);
-        
-        allSongsArray = allSongsArray.concat(currPlaylistSongs);
+        allSongsArray = [...allSongsArray, ...currPlaylistSongs];
       }
     }
     return allSongsArray;
+  }
+  async createAnalysisArray(songsList){
+    const analysisPromise = await this.getSongObjects(this.props.token, songsList);
+    return analysisPromise;
   }
   createArtistToSongMap(songArray){
     var artistDictionary = {};
@@ -149,7 +162,7 @@ export default class AnalysisPage extends Component {
       <svg viewBox="0 0 600 400">
         <VictoryPie standalone={false}
           padding={{ top: 50, bottom: 50, left: 100, right: -300}}
-          width={400} height={400}
+          width={400} height={350}
           colorScale={["tomato", "orange", "gold", "lightblue", "lightyellow", "lightgreen"]}
           labels={() => null}
           data={data}
@@ -196,6 +209,7 @@ export default class AnalysisPage extends Component {
         analysis
         {this.state.artistToSongMap !== undefined && (
           <div className="popularArtistChartContainer">
+            <SongGraph allSongsArray={this.state.allSongsArray}/>
             <h1 className="dataCardHeader">Most Popular Artists</h1>
             {this.popularArtistPieChart()}
           </div>
