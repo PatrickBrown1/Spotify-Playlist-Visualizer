@@ -1,10 +1,41 @@
-.popularArtistChartContainer {
+.AnalysisPage {
+    display: flex;
+    
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    margin-top: 100px;
+}
+.dataContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 80vw;
+    height: 90%;
+}
+.songPlotContainer {
     background-color: white;
-    width: 50vw;
-    height: 60vh;
+    height: 40px;
+    width: 60vw;
+    padding-bottom: 40vw;
     box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
     0 9px 28px 8px rgba(0, 0, 0, 0.15);
-    padding: 3em;
+    border: rgb(30, 30, 30) 2px; 
+    border-style: solid;
+    border-radius: 10px;
+}
+.popularArtistChartContainer {
+    background-color: white;
+    height: 40px; /* This is the height of the card title */
+    /* To maintain the 600:400 aspect ratio of the viewbox of the svg, have width
+    be the horizontal aspect, and padding bottom be the vertical aspect*/
+    width: 60vw;
+    padding-bottom: 40vw;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
+    0 9px 28px 8px rgba(0, 0, 0, 0.15);
     border: rgb(30, 30, 30) 2px; 
     border-style: solid;
     border-radius: 10px;

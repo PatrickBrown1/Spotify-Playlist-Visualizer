@@ -205,13 +205,18 @@ export default class AnalysisPage extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="AnalysisPage">
         analysis
         {this.state.artistToSongMap !== undefined && (
-          <div className="popularArtistChartContainer">
-            <SongGraph allSongsArray={this.state.allSongsArray}/>
-            <h1 className="dataCardHeader">Most Popular Artists</h1>
-            {this.popularArtistPieChart()}
+          <div className="dataContainer">
+            <div className="songPlotContainer">
+              <h1 className="dataCardHeader">See all your songs!</h1>
+              <SongGraph allSongsArray={this.state.allSongsArray}/>
+            </div>
+            <div className="popularArtistChartContainer">
+              <h1 className="dataCardHeader">Most Popular Artists</h1>
+              {this.popularArtistPieChart()}
+            </div>
           </div>
         )}
       </div>
