@@ -2,24 +2,41 @@ import React, { Component } from "react";
 
 import { VictoryTheme, VictoryScatter, VictoryChart, VictoryLabel, VictoryAxis } from "victory";
 import "./SongGraph.css";
+
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+
 export default class SongGraph extends Component {
   constructor(props) {
     super();
     this.state = {
+      domain: "danceability",
+      range: "energy",
     };
     console.log(props.allSongsArray);
     this.createChartData = this.createChartData.bind(this);
     this.calculateDomain = this.calculateDomain.bind(this);
+    this._onSelectX = this._onSelectX.bind(this)
+    this._onSelectY = this._onSelectY.bind(this)
   }
-
+  _onSelectX (option) {
+    console.log('You selected domain ', option.label);
+    this.setState({domain: option.value});
+  }
+  _onSelectY (option) {
+    console.log('You selected range', option.label);
+    this.setState({range: option.value});
+  }
   componentDidMount() {
   }
 
   componentWillUnmount() {
 
   }
-  createChartData(domainName, rangeName){
+  createChartData(domain, range){
     var dataset = [];
+    var domainName = domain;
+    var rangeName = range;
     //need to create a data set with x and y
     this.props.allSongsArray.forEach(songObj => {
       dataset.push({
@@ -30,8 +47,10 @@ export default class SongGraph extends Component {
     });
     return dataset;
   }
-  calculateDomain(domainName, rangeName){
+  calculateDomain(domain, range){
     var domainObj = {};
+    var domainName = domain;
+    var rangeName = range;
     switch(domainName){
       case "acousticness":
         domainObj.x = [0, 1];
@@ -97,9 +116,23 @@ export default class SongGraph extends Component {
     return domainObj;
   }
   render() {
-    var domainObj = this.calculateDomain("danceability", "energy");
+    var domainName = this.state.domain;
+    var rangeName = this.state.range;
+    var domainObj = this.calculateDomain(domainName, rangeName);
+    const options = [
+      'acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness',
+      'loudness', 'speechiness', 'valence', 'tempo'
+    ];    
     return (
       <div>
+        <div className="text-div">
+          <h2 className="header-text">Domain (x)</h2>
+          <h2 className="header-text">Range (Y)</h2>
+        </div>
+        <div className="dropdown-div">
+          <Dropdown className="drop-down" options={options} onChange={this._onSelectX} value={domainName} placeholder="Select an option" />
+          <Dropdown className="drop-down" options={options} onChange={this._onSelectY} value={rangeName} placeholder="Select an option" />
+        </div>
         <VictoryChart
             theme={VictoryTheme.material}
             domain={domainObj}
@@ -109,7 +142,7 @@ export default class SongGraph extends Component {
             <VictoryScatter
                 style={{ data: { fill: "#c43a31" } }}
                 size={7}
-                data={this.createChartData("danceability", "energy")}
+                data={this.createChartData(domainName, rangeName)}
                 labels={({datum}) => ""}
                 labelComponent={<VictoryLabel className="label-text"/>}
                 events={[
@@ -155,7 +188,7 @@ export default class SongGraph extends Component {
             <VictoryAxis
               crossAxis
               domain={domainObj.x}
-              label="danceability (x)"
+              label={this.state.domain}
               width={600}
               height={400}
               standalone={false}
@@ -164,7 +197,7 @@ export default class SongGraph extends Component {
             <VictoryAxis
               dependentAxis
               domain={domainObj.y}
-              label="energy (y)"
+              label={this.state.range}
               width={600}
               height={400}
               standalone={false}

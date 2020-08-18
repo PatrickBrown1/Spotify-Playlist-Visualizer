@@ -20,7 +20,7 @@
     background-color: white;
     height: 40px;
     width: 60vw;
-    padding: 1vw 1vw 41vw 1vw;
+    padding: 1em 1em calc(40vw + 8em) 1em;
     box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
     0 9px 28px 8px rgba(0, 0, 0, 0.15);
     border: rgb(30, 30, 30) 2px; 
@@ -33,7 +33,7 @@
     /* To maintain the 600:400 aspect ratio of the viewbox of the svg, have width
     be the horizontal aspect, and padding bottom be the vertical aspect*/
     width: 60vw;
-    padding: 1vw 1vw 41vw 1vw;
+    padding: 1vw 1vw 42vw 1vw;
     box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
     0 9px 28px 8px rgba(0, 0, 0, 0.15);
     border: rgb(30, 30, 30) 2px; 

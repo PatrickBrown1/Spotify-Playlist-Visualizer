@@ -1,3 +1,23 @@
 .label-text{
     pointer-events:none;
 }
+.dropdown-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.drop-down {
+    height: 3em;
+    width: 40%;
+}
+.text-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    color: black;
+}
+.header-text {
+    width: 40%;
+}
