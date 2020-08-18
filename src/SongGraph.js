@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { VictoryTheme, VictoryScatter, VictoryChart, VictoryLabel } from "victory";
+import { VictoryTheme, VictoryScatter, VictoryChart, VictoryLabel, VictoryAxis } from "victory";
 import "./SongGraph.css";
 export default class SongGraph extends Component {
   constructor(props) {
@@ -97,11 +97,12 @@ export default class SongGraph extends Component {
     return domainObj;
   }
   render() {
+    var domainObj = this.calculateDomain("danceability", "energy");
     return (
       <div>
         <VictoryChart
             theme={VictoryTheme.material}
-            domain={this.calculateDomain("danceability", "energy")}
+            domain={domainObj}
             width={600}
             height={400}
         >
@@ -150,6 +151,24 @@ export default class SongGraph extends Component {
                     }
                   }
                 ]}
+            />
+            <VictoryAxis
+              crossAxis
+              domain={domainObj.x}
+              label="danceability (x)"
+              width={600}
+              height={400}
+              standalone={false}
+              axisLabelComponent={<VictoryLabel dy={20} />}
+            />
+            <VictoryAxis
+              dependentAxis
+              domain={domainObj.y}
+              label="energy (y)"
+              width={600}
+              height={400}
+              standalone={false}
+              axisLabelComponent={<VictoryLabel dy={-30} />}
             />
         </VictoryChart>
       </div>
