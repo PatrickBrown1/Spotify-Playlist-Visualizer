@@ -32,15 +32,14 @@ class App extends Component {
       <div>
         <Router>
           <div className="App">
-            <nav>
-              <NavBar />
-            </nav>
             <body>
               <Switch>
                 <Route path="/about">
+                  <NavBar />
                   <AboutPage />
                 </Route>
                 <Route path="/data">
+                  <NavBar />
                   <DataPage auth_token={this.state.auth_token} />
                 </Route>
                 <Route path="/">

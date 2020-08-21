@@ -1,40 +1,82 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
-
-.background {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 120%;
-    top: -20%;
-    left: 0%;
-    z-index: -1;
-    background: url('hero-page-spotify-project.jpg') 0 0 repeat;
-    background-size: 120%;
+*{
+    padding: 0;
+    margin: 0;
+  }
+  .grid-container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 10vh 35vh 35vh 20vh;
+    grid-template-columns: 5vw auto 20vw 20vw 10vw;
+    grid-gap: 0px;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .title-header {
+      color: rgb(0, 0, 0);
+      font-size: 48px;
+      font-family: 'Open Sans';
+      font-weight: 600;
+      text-decoration: underline;
+      padding-top: 100px;
+      padding-right: 100px;
+  }
+  .subtitle-header {
+      color: rgb(0, 0, 0);
+      font-size: 32px;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      padding-right: 113px;
+  }
+  .white-bg{
+    background-color: white;
+  }
+  .navy-bg{
+    background-color: #14213D;
+  }
+  .circle-item {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     
-    filter: blur(3px);
-}
-
-.title-header {
-    color: rgb(0, 0, 0);
-    position: relative;
-    margin: 3em 0em 0em 3.5em;
-    font-size: 3.5em;
-    font-family: 'Open Sans';
-    font-weight: 600;
-    text-decoration: underline;
-}
-.subtitle-header {
-    color: rgb(0, 0, 0);
-    position: relative;
-    margin: -.2em 0em 0em 4.9em;
-    font-size: 2.5em;
-    font-family: 'Open Sans';
-    font-weight: 400;
-}
-.main-button {
-    position: relative;
-    left: 12.5vw;
-    top: 10vh;
+    background: rgb(255,255,255);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 50%, rgba(20,33,61,1) 50%);
+    grid-column-start: 3;
+    grid-column-end: span 2;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+  }
+  #record-container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+    background: #B3679B;
+    height: 70vh;
+    width: 70vh;
+    filter: drop-shadow(1px 1px 0px #B3679B) drop-shadow(-1px 1px 0px #B3679B) drop-shadow(1px -1px 0px #B3679B) drop-shadow(-1px -1px 0px #B3679B);
+    border-radius: 50%;
+  }
+  #record {
+    width: 90%;
+    height: 90%;
+    background-color: white;
+    border-radius: 50%;
+    background: #B3679B;
+    transform: rotate(-5deg);
+  }
+  .left-border{
+    border-left: 20px solid #B3679B;
+  }
+  .right-border{
+    border-right: 20px solid #B3679B;
+  }
+  .main-button {
 
     color: black;
 
@@ -42,7 +84,8 @@
     font-weight: 800;
     font-size: 2em;
     text-decoration: none;
-
+    margin-top: 150px;
+    margin-right: 110px;
     padding: 0.7em;
     border: 2px solid black;
     
