@@ -5,7 +5,7 @@
   justify-content: center;
   text-align: center;
   align-content: flex-start;
-  background-color: #282c34;
+  background-color: #14213D;
   color: white;
   min-height: 100vh;
 }
@@ -15,7 +15,7 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: flex-start;
-  background-color: rgb(200, 200, 200);
+  background-color: #E5E5E5;
   width: 80%;
   align-self: center;
   padding: 20px;
