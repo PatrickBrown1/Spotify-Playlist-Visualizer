@@ -7,8 +7,13 @@
     height: 17vw;
     margin: 10px 0 10px 0;
     
-    background-color: rgb(220, 220, 220);
+    background-color: white;
     transition: box-shadow 0.2s;
+
+    opacity: 1;
+    filter: grayscale(0%);
+
+
 
     border: rgb(30, 30, 30) 2px;
     border-style: solid;
@@ -26,9 +31,12 @@
     width: 17vw;
 }
 .text-container {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: 50%;
     height: 100%;
+    padding: 0;
+    margin: 0;
 }
 .text-container > h1 {
     padding: 0 3px 0 3px;
@@ -57,4 +65,16 @@
     opacity: 0.4;
     filter: grayscale(70%);
   }
-  
+.title-container{
+    border-bottom: 2px solid black;
+    color: black;
+    width: 100%;
+    padding: 5px 0 10px 0;
+}
+.info-container{
+    padding-left: 20px;
+    text-align: justify;
+    color: black;
+    width: 100%;
+    font-size: 18px;
+}

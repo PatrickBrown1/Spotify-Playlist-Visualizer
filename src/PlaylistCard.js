@@ -9,6 +9,7 @@ var PlaylistCard = function(props) {
     const playlistOwner = props.playlistObject.owner.display_name;
     const imageArray = props.playlistObject.images;
     //first image in imageArray is the biggest (index 0). use this and rescale down
+    const colaborative = props.playlistObject.colaborative;
     if(props.toBeUsed){
         return(
             <Card bordered={true} onClick={() => props.handleCardClick(props.playlistObject.id)}>
@@ -18,9 +19,14 @@ var PlaylistCard = function(props) {
                     </div>
                     <div className="divider"></div>
                     <div className="text-container">
-                        <h1>{playlistName}</h1>
-                        <h2>{playlistOwner}</h2>
-                        <h2>{playlistNumTracks}</h2>
+                        <div className="title-container"> 
+                            <h1>{playlistName}</h1>
+                        </div>
+                        <div className="info-container">
+                            <span style={{fontWeight: "bold",}}>Owner:</span> {playlistOwner} <br/>
+                            <span style={{fontWeight: "bold",}}>No. Songs:</span>  {playlistNumTracks} <br />
+                            <span style={{fontWeight: "bold",}}>Colaborative:</span>  {colaborative}
+                        </div>
                     </div>
                 </div>
             </Card>
@@ -35,9 +41,14 @@ var PlaylistCard = function(props) {
                     </div>
                     <div className="divider"></div>
                     <div className="text-container">
-                        <h1>{playlistName}</h1>
-                        <h2>{playlistOwner}</h2>
-                        <h2>{playlistNumTracks}</h2>
+                        <div className="title-container"> 
+                            <h1>{playlistName}</h1>
+                        </div>
+                        <div className="info-container">
+                            <span style={{fontWeight: "bold",}}>Owner:</span> {playlistOwner} <br/>
+                            <span style={{fontWeight: "bold",}}>No. Songs:</span>  {playlistNumTracks} <br />
+                            <span style={{fontWeight: "bold",}}>Colaborative:</span>  {colaborative}
+                        </div>
                     </div>
                 </div>
             </Card>
