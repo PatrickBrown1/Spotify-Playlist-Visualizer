@@ -147,7 +147,8 @@ export async function getAllSongs(token, first_page){
       call++;
       //the paging object items contains an array of playlist tracj=k objects, need to parse into the track object
       var i;
-      for(i = 0; i < current_call_songs.length; i++){
+      const len = current_call_songs.length;
+      for(i = 0; i < len; i++){
         all_songs_playlist.push(current_call_songs[i].track);
       }
      
@@ -205,7 +206,7 @@ export async function getSongObjects(token, songArray){
     var id_list = "";
     var i = 0;
     while(songArray.length > 0 && i < 100){
-      if(i != 0){ //to ensure the last one doesn't have a comma, we put commas at the front
+      if(i%100 != 0){ //to ensure the last one doesn't have a comma, we put commas at the front
         id_list += ",";
       }
       id_list += songArray.pop().id;
@@ -231,7 +232,9 @@ export async function getSongObjects(token, songArray){
       var features = data.data.audio_features;
       //console.log("FEATURES");
       //console.log(features);
-      features.forEach(songObj => {song_object_list.push({id: songObj.id, song_analysis: songObj})});
+      features.forEach(songObj => {
+        song_object_list.push({id: songObj.id, song_analysis: songObj});
+      });
     }).catch((error) => {
       //this is taken from: https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
       // Error 😨

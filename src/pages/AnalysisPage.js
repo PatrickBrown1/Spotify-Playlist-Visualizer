@@ -4,6 +4,7 @@ import { getAllSongs, getSongObjects } from "../APIHandler.js";
 import { VictoryPie, VictoryLegend } from "victory";
 import "./AnalysisPage.css";
 import SongGraph from "../SongGraph.js"
+import _ from "lodash";
 
 export default class AnalysisPage extends Component {
   constructor() {
@@ -20,14 +21,29 @@ export default class AnalysisPage extends Component {
     this.createAnalysisArray = this.createAnalysisArray.bind(this);
   }
   async componentDidMount() {
-    //start all analysis functions here
+    //Progression of API Calls / Filtering of this function
+    //1. (API CALL) get an array of all songs in the playlists selected
+    //  1a. remove all duplicates from these songs (done with lodash library)
+    //2. (API CALL) get an array of the "music analysis" of all of the
+    //   songs in the playlists selected
+    //3. Pair/Add these music analysis objects to the song object from 1.
+    //4. Create the artist to song map, set state.
+
+    //1
     var allSongs = await this.createSongArray(this.props.filteredPlaylists);
+    console.log(allSongs);
+    //let [someResult, anotherResult] = await Promise.all([someCall(), anotherCall()]);
+    //2
+    //MUST USE SLICE HERE BECAUSE THE ALLSONGS ARRAY CLEARS IF YOU DO NOT????
     var musicAnalysisArray = await this.createAnalysisArray(allSongs.slice());
+    console.log(musicAnalysisArray);
+    //3
     musicAnalysisArray.forEach(songObj => {
-      allSongs.find(x => x.id === songObj.id)["song_analysis"] 
+      allSongs.find(x => x.id === songObj.id).song_analysis 
         = songObj.song_analysis;
     });
-    console.log(allSongs);
+    
+    //4
     this.setState({artistToSongMap: this.createArtistToSongMap(allSongs),
                    allSongsArray: allSongs});
   }
@@ -38,23 +54,24 @@ export default class AnalysisPage extends Component {
         passed through this.props.filteredPlaylists. It has to do this by calling the
         api for each playlist, hence the use of the APIHandler.
     */
-    //console.log("Inside createSongArray()");
-    //console.log("playlists:");
-    //console.log(playlists);
-    var allSongsArray = [];
+    
+    var promiseList = [];
     var i;
-    for(i = 0; i < playlists.length; i++){
+    const numPlaylists = playlists.length;
+    for(i = 0; i < numPlaylists; i++){
       var playlist = playlists[i];
-      //console.log("current playlist: ");
-      //console.log(playlist);
       if(playlist.tracks != null){
         const callURL = playlist.tracks.href;
-        //console.log("current call url: " + callURL);
-        var currPlaylistSongs = await getAllSongs(this.props.token, callURL);
-        allSongsArray = [...allSongsArray, ...currPlaylistSongs];
+        promiseList.push(getAllSongs(this.props.token, callURL));
       }
     }
-    return allSongsArray;
+    var allSongsArray = [];
+    const values = await Promise.all(promiseList);
+    values.forEach( value => {
+      allSongsArray = [...allSongsArray, ...value];
+    });
+    const uniqueSongsArray = _.uniqBy(allSongsArray, "id");
+    return uniqueSongsArray;
   }
   async createAnalysisArray(songsList){
     const analysisPromise = await this.getSongObjects(this.props.token, songsList);
