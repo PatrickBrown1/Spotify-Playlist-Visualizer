@@ -4,6 +4,7 @@ import { getAllSongs, getSongObjects } from "../APIHandler.js";
 import { VictoryPie, VictoryLegend } from "victory";
 import "./AnalysisPage.css";
 import SongGraph from "../SongGraph.js"
+import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
 
 export default class AnalysisPage extends Component {
@@ -17,7 +18,6 @@ export default class AnalysisPage extends Component {
     this.createSongArray = this.createSongArray.bind(this);
     this.calculateMostPopularGenre = this.calculateMostPopularGenre.bind(this);
     this.createArtistToSongMap = this.createArtistToSongMap.bind(this);
-    this.popularArtistPieChart = this.popularArtistPieChart.bind(this);
     this.createAnalysisArray = this.createAnalysisArray.bind(this);
   }
   componentWillMount (){
@@ -119,90 +119,6 @@ export default class AnalysisPage extends Component {
     console.log(artistDictionary);
     return artistDictionary;
   }
-  popularArtistPieChart(){
-    var data = [];
-    var legendData = [];
-    var artistToSongMapVar = this.state.artistToSongMap;
-    var biggestArtistList = [];
-    var smallerArtistList = [];
-    const totalSections = 5;
-    const compare = (a, b) => {
-      // Use toUpperCase() to ignore character casing
-      const numA = a.y;
-      const numB = b.y;
-    
-      let comparison = 0;
-      if (numA > numB) {
-        comparison = 1;
-      } else if (numA < numB) {
-        comparison = -1;
-      }
-      return comparison*-1;
-    }
-    //iterate through each artist
-    //if the artist has more songs than someone in the "biggestArtistList",
-    //pop that artist and add the new artist to the biggestArtistLists
-    //add the old artist to the smallerArtistLists
-
-    Object.keys(artistToSongMapVar).forEach(function (key) {
-      var nameArtist = key;
-      var numSongs = artistToSongMapVar[key].length;
-      if(biggestArtistList.length < totalSections){
-        //must populate the bigestArtistList with the first 5 artists
-        biggestArtistList.push({x: nameArtist, y: numSongs});
-      }
-      else{
-        //if the current artist is bigger than the smallest artist of the biggest artists,
-        //move the smallest artist to the smallerArtistList, and add the new artist
-        //sorting the list to the smallest is at the end, so only have to check last location
-        biggestArtistList.sort(compare);
-        var smallestArtist = biggestArtistList[4];
-        if(numSongs > smallestArtist["y"]){
-          biggestArtistList.pop();
-          biggestArtistList.push({x: nameArtist, y: numSongs});
-          smallerArtistList.push(smallestArtist);
-          
-          biggestArtistList.sort(compare);
-        }
-        else{
-          smallerArtistList.push({x: nameArtist, y: numSongs});
-        }
-      }
-      //data.push({x: key, y: artistToSongMapVar[key].length});
-    });
-    biggestArtistList.forEach(obj => {
-      data.push(obj)
-      legendData.push({name: obj.x});
-    });
-    legendData.push({name: "Other"});
-    var numOther = 0;
-    smallerArtistList.forEach(obj => {numOther += obj.y});
-    data.push({x: "Other", y: numOther});
-    console.log(legendData);
-    return (
-      <svg viewBox="0 0 600 400">
-        <VictoryPie standalone={false}
-          padding={{ top: 50, bottom: 50, left: 100, right: -300}}
-          width={400} height={350}
-          colorScale={["tomato", "orange", "gold", "lightblue", "lightyellow", "lightgreen"]}
-          labels={() => null}
-          data={data}
-        />
-        <VictoryLegend standalone={false}
-          title="Legend"
-          centerTitle
-          x={20} y={80}
-          width={50} height={200}
-          padding={{top: 100, bottom: 100, left: 10}}
-          borderPadding={{ left: 15, right: 20 }}
-          colorScale={["tomato", "orange", "gold", "lightblue", "lightyellow", "lightgreen"]}
-          style={{ border: { stroke: "black" }, }}
-          data={legendData}
-        />   
-      </svg>
-    );
-  }
-  
   calculateMostPopularGenre(songArray) {
     /*
         This function will calcualte the most popular genre given an array of songs
@@ -241,7 +157,7 @@ export default class AnalysisPage extends Component {
             </div>
             <div className="popularArtistChartContainer">
               <h1 className="dataCardHeader">Most Popular Artists</h1>
-              {this.popularArtistPieChart()}
+              <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
             </div>
           </div>
         )}
