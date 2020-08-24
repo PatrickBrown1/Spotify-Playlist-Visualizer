@@ -20,6 +20,9 @@ export default class AnalysisPage extends Component {
     this.popularArtistPieChart = this.popularArtistPieChart.bind(this);
     this.createAnalysisArray = this.createAnalysisArray.bind(this);
   }
+  componentWillMount (){
+    this.setState({loading: true});
+  }
   async componentDidMount() {
     //Progression of API Calls / Filtering of this function
     //1. (API CALL) get an array of all songs in the playlists selected
@@ -45,7 +48,8 @@ export default class AnalysisPage extends Component {
     
     //4
     this.setState({artistToSongMap: this.createArtistToSongMap(allSongs),
-                   allSongsArray: allSongs});
+                   allSongsArray: allSongs,
+                  loading: false});
   }
   componentWillUnmount() {}
   async createSongArray(playlists) {
@@ -224,7 +228,12 @@ export default class AnalysisPage extends Component {
     return (
       <div className="AnalysisPage">
         analysis
-        {this.state.artistToSongMap !== undefined && (
+        {this.state.loading === true && (
+          <div>
+            fetching data from spotify api! Hang tight
+          </div>
+        )}
+        {this.state.loading === false && (
           <div className="dataContainer">
             <div className="songPlotContainer">
               <h1 className="dataCardHeader">See all your songs!</h1>

@@ -13,7 +13,6 @@ export default class SongGraph extends Component {
       domain: "danceability",
       range: "energy",
     };
-    console.log(props.allSongsArray);
     this.createChartData = this.createChartData.bind(this);
     this.calculateDomain = this.calculateDomain.bind(this);
     this._onSelectX = this._onSelectX.bind(this)
@@ -39,6 +38,22 @@ export default class SongGraph extends Component {
     var rangeName = range;
     //need to create a data set with x and y
     this.props.allSongsArray.forEach(songObj => {
+      if(songObj === undefined){
+        console.log("undefined");
+        console.log(songObj);
+      }
+      if(songObj === null){
+        console.log("null");
+        console.log(songObj);
+      }
+      if(songObj["song_analysis"] === undefined){
+        console.log("song analysis undefined");
+        console.log(songObj);
+      }
+      if(songObj["song_analysis"] === null){
+        console.log("song analysis null");
+        console.log(songObj);
+      }
       dataset.push({
         x: songObj["song_analysis"][domainName],
         y: songObj["song_analysis"][rangeName],
@@ -77,7 +92,7 @@ export default class SongGraph extends Component {
         domainObj.x = [0, 1];
         break;
       case "tempo":
-        domainObj.x = [0, 200];
+        domainObj.x = [0, 250];
         break;
       default:
         domainObj.x = [0, 100];
@@ -108,7 +123,7 @@ export default class SongGraph extends Component {
         domainObj.y = [0, 1];
         break;
       case "tempo":
-        domainObj.y = [0, 200];
+        domainObj.y = [0, 250];
         break;
       default:
         domainObj.y = [0, 100];

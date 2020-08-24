@@ -62,7 +62,7 @@ export default class HomePage extends Component {
           )}
           {this.props.auth_token && (
             <Link to="/data">
-              <Button type="primary">
+              <Button type="primary" className="main-button">
                 Explore
               </Button>
             </Link>
