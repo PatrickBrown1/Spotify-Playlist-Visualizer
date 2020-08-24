@@ -7,6 +7,8 @@ import SongGraph from "../SongGraph.js"
 import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
 
+import BarLoader from "react-spinners/BarLoader";
+
 export default class AnalysisPage extends Component {
   constructor() {
     super();
@@ -143,10 +145,20 @@ export default class AnalysisPage extends Component {
   render() {
     return (
       <div className="AnalysisPage">
-        analysis
         {this.state.loading === true && (
           <div>
-            fetching data from spotify api! Hang tight
+            <BarLoader
+              color="#FFFFFF"
+              height={10}
+              width={400}
+              loading={this.state.loading}
+            />
+            <div className="loading-text">
+              Fetching the data <br />
+              Hold tight!
+
+            </div>
+            
           </div>
         )}
         {this.state.loading === false && (

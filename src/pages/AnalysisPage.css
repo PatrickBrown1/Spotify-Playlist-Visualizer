@@ -45,3 +45,9 @@
     font-size: 40px;
     line-height: 0%;
 }
+.loading-text {
+    color: white;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 120%;
+}
