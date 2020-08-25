@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { VictoryPie, VictoryLegend } from "victory";
+import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
 
 export default class ArtistPieGraph extends Component {
@@ -46,7 +46,7 @@ export default class ArtistPieGraph extends Component {
       var numSongs = artistToSongMapVar[key].length;
       if(biggestArtistList.length < totalSections){
         //must populate the bigestArtistList with the first 5 artists
-        biggestArtistList.push({x: nameArtist, y: numSongs});
+        biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
       }
       else{
         //if the current artist is bigger than the smallest artist of the biggest artists,
@@ -56,13 +56,13 @@ export default class ArtistPieGraph extends Component {
         var smallestArtist = biggestArtistList[4];
         if(numSongs > smallestArtist["y"]){
           biggestArtistList.pop();
-          biggestArtistList.push({x: nameArtist, y: numSongs});
+          biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
           smallerArtistList.push(smallestArtist);
           
           biggestArtistList.sort(compare);
         }
         else{
-          smallerArtistList.push({x: nameArtist, y: numSongs});
+          smallerArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
         }
       }
       //data.push({x: key, y: artistToSongMapVar[key].length});
@@ -75,7 +75,7 @@ export default class ArtistPieGraph extends Component {
     var numOther = 0;
     smallerArtistList.forEach(obj => {numOther += obj.y});
     if(numOther != 0){
-        data.push({x: "Other", y: numOther});
+        data.push({x: "Other", y: numOther, label: "Other, " + numOther + " songs"});
         legendData.push({name: "Other"});
     }
     console.log(legendData);
@@ -86,13 +86,53 @@ export default class ArtistPieGraph extends Component {
     const chartData = this.popularArtistPieChart();
     return (
       <div>
-        <svg viewBox="0 0 600 400">
+        <svg viewBox="0 0 600 400" style={{overflow:"visible"}}>
             <VictoryPie standalone={false}
                 padding={{ top: 50, bottom: 50, left: 100, right: -300}}
                 width={400} height={350}
                 colorScale={["tomato", "orange", "gold", "lightblue", "darkorchid", "lightgreen"]}
-                labels={() => null}
+                labels={({datum}) => "a"}
+                labelComponent={
+                  <VictoryTooltip
+                    center
+                    cornerRadius={0}
+                    pointerLength={0}
+                    flyoutPadding={10}
+                    flyoutStyle={{
+                      stroke: "black",
+                      fill: "white"
+                    }}
+                  />
+                }
+                
                 data={chartData[0]}
+                events={[
+                  {
+                    target: "data",
+                    eventHandlers: {
+                      onMouseOver: () => {
+                        
+                        this.setState({A: "a"});
+                        return [
+                          {
+                            target: "labels",
+                            mutation: () => ({ active: true })
+                          }
+                        ];
+                      },
+                      onMouseOut: () => {
+                        
+                        this.setState({A: "a"});
+                        return [
+                          {
+                            target: "labels",
+                            mutation: () => ({ active: false })
+                          }
+                        ];
+                      }
+                    }
+                  }
+                ]}
             />
             <VictoryLegend standalone={false}
                 title="Legend"
