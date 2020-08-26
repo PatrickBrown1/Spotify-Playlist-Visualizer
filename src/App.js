@@ -29,17 +29,14 @@ class App extends Component {
 
   render() {
     return (
-      <div>
         <Router>
           <div className="App">
             <body>
               <Switch>
                 <Route path="/about">
-                  <NavBar />
                   <AboutPage />
                 </Route>
                 <Route path="/data">
-                  <NavBar />
                   <DataPage auth_token={this.state.auth_token} />
                 </Route>
                 <Route path="/">
@@ -49,7 +46,6 @@ class App extends Component {
             </body>
           </div>
         </Router>
-      </div>
     );
   }
 }

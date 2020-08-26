@@ -24,6 +24,7 @@ export default class DataPage extends Component {
       playlists: null,
       number_playlists: 0,
       showAnalysis: false,
+      numSelectedPlaylists: 0,
     };
     this.getUserInformation = getUserInformation.bind(this);
     this.getPlaylistNames = getPlaylistNames.bind(this);
@@ -34,6 +35,7 @@ export default class DataPage extends Component {
     this.deselectAllPlaylists = this.deselectAllPlaylists.bind(this);
     this.handleGoClick = this.handleGoClick.bind(this);
     this.filterPlaylists = this.filterPlaylists.bind(this);
+    this.selectOwnedPlaylists = this.selectOwnedPlaylists.bind(this);
   }
 
   async componentDidMount() {
@@ -65,12 +67,14 @@ export default class DataPage extends Component {
         this.setState({
           playlists: playlists_data,
           number_playlists: playlists_data.length,
+          numSelectedPlaylists: playlists_data.length,
           no_playlist_data: false,
         });
       } else {
         this.setState({
           playlists: [],
           number_playlists: 0,
+          numSelectedPlaylists: 0,
           no_playlist_data: true,
         });
       }
@@ -108,16 +112,27 @@ export default class DataPage extends Component {
   handleCardClick(id) {
     //find playlist with the correct id
     var tempPlaylists = this.state.playlists;
+    var numSelectedDelta = 0;
     tempPlaylists.forEach((playlist) => {
       if (playlist.id === id) {
         //flip clicked boolean
-
-        //console.log("Playlist with id " + id + " was " + playlist.toBeUsed);
+        if(playlist.toBeUsed === true){
+          //deselect playlist, decrement number of selected playlists
+          numSelectedDelta = -1;
+        }
+        else{
+          //select playlist, increment number of selected playlists
+          numSelectedDelta = 1;
+        }
         playlist.toBeUsed = !playlist.toBeUsed;
-        //console.log("Playlist with id " + id + " is now " + playlist.toBeUsed);
       }
     });
-    this.setState({ playlists: tempPlaylists });
+    this.setState( (prevState) => { 
+      return{
+        playlists: tempPlaylists, 
+        numSelectedPlaylists: prevState.numSelectedPlaylists + numSelectedDelta,
+      }
+    });
   }
 
   //The following two functions are only called if the playlist data is not null
@@ -130,7 +145,7 @@ export default class DataPage extends Component {
       playlist.toBeUsed = true;
     });
     //set state to new playlist array
-    this.setState({ playlists: tempPlaylists });
+    this.setState({ playlists: tempPlaylists, numSelectedPlaylists: tempPlaylists.length });
   }
   deselectAllPlaylists() {
     //get playlist array from state and put into temp array
@@ -141,7 +156,22 @@ export default class DataPage extends Component {
       playlist.toBeUsed = false;
     });
     //set state to new playlist array
-    this.setState({ playlists: tempPlaylists });
+    this.setState({ playlists: tempPlaylists, numSelectedPlaylists: 0 });
+  }
+  selectOwnedPlaylists(){
+    var tempPlaylists = this.state.playlists;
+    var playlistsIncluded = 0;
+    //iterate through all non-owned playlists, set toBeUsed to false
+    tempPlaylists.forEach((playlist) => {
+      if(playlist.owner.id !== this.state.user_info.id){
+        playlist.toBeUsed = false;
+      }
+      else{
+        playlistsIncluded++;
+      }
+    });
+    //set state to new playlist array
+    this.setState({ playlists: tempPlaylists, numSelectedPlaylists: playlistsIncluded });
   }
   handleGoClick(){
     this.setState({showAnalysis: true});
@@ -157,13 +187,15 @@ export default class DataPage extends Component {
     return filteredArray;
   }
   render() {
+    const numSelectedPlaylists = this.state.numSelectedPlaylists;
+    const numTotalPlaylists = this.state.number_playlists;
     var cardList = null;
     if (!this.state.no_playlist_data) {
       cardList = this.createPlaylistCards();
     }
     //console.log("rendering datapage");
     return (
-      <div>
+      <div className="data-page-main">
         {!this.state.token && (
           <div className="error-header">
               <div>
@@ -177,26 +209,31 @@ export default class DataPage extends Component {
           </div>
         )}
         {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
-          <div className="data-page-main">
-            <div className="header">
-              <h2> Hello, {this.state.user_info.display_name}</h2>
-              <h3> Here are your playlists</h3>
-            </div>
+          <div>
             <div className="above-playlist-container">
-              <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
-              <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
               <h5 className="playlist-number">Total Playlists: {this.state.number_playlists}</h5>
             </div>
-            <div className="card-container">{cardList}</div>
+
+            <div className="data-body">
+              <div className="sorting-button-container">
+                <h3>Filter Playlists</h3>
+                <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
+                <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
+                <Button className="filter-buttons" type="primary" onClick={() => this.selectOwnedPlaylists()}>Owned by Me</Button>
+                <div style={{marginTop: "auto"}}></div>
+                <h4>{numSelectedPlaylists} Playlists Selected</h4>
+                <h4>{numTotalPlaylists} Playlists Total</h4>
+              </div>
+              <div className="card-container">{cardList}</div>
+            </div>
+            
             <div className="footer">
               <Button className="footer-button" type="primary" onClick={() => this.handleGoClick()}>Go</Button>
             </div>
           </div>
         )}
         {this.state.showAnalysis && this.state.token && (
-          <div className="data-page-main">
-            <AnalysisPage filteredPlaylists={this.filterPlaylists()} token={this.state.token}/>
-          </div>
+          <AnalysisPage filteredPlaylists={this.filterPlaylists()} token={this.state.token}/>
         )}
       </div>
     );
