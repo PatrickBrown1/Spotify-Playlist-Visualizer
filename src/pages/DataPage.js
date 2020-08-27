@@ -210,10 +210,6 @@ export default class DataPage extends Component {
         )}
         {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
           <div>
-            <div className="above-playlist-container">
-              <h5 className="playlist-number">Total Playlists: {this.state.number_playlists}</h5>
-            </div>
-
             <div className="data-body">
               <div className="sorting-button-container">
                 <h3>Filter Playlists</h3>
