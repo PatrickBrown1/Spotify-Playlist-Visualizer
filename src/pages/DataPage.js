@@ -63,11 +63,11 @@ export default class DataPage extends Component {
       console.log("done fetching playlists");
       if (playlists_data.length != null) {
         //add clicked field to each object, default as true
-        playlists_data.forEach((playlist) => (playlist.toBeUsed = true));
+        playlists_data.forEach((playlist) => (playlist.toBeUsed = false));
         this.setState({
           playlists: playlists_data,
           number_playlists: playlists_data.length,
-          numSelectedPlaylists: playlists_data.length,
+          numSelectedPlaylists: 0,
           no_playlist_data: false,
         });
       } else {
@@ -167,6 +167,7 @@ export default class DataPage extends Component {
         playlist.toBeUsed = false;
       }
       else{
+        playlist.toBeUsed = true;
         playlistsIncluded++;
       }
     });
@@ -210,6 +211,9 @@ export default class DataPage extends Component {
         )}
         {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
           <div>
+            <div className="above-playlist-container"> 
+              <h1>Pick some Playlists to Analyze</h1>
+            </div>
             <div className="data-body">
               <div className="sorting-button-container">
                 <h3>Filter Playlists</h3>

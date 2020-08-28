@@ -46,7 +46,7 @@ export default class ArtistPieGraph extends Component {
       var numSongs = artistToSongMapVar[key].length;
       if(biggestArtistList.length < totalSections){
         //must populate the bigestArtistList with the first 5 artists
-        biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
+        biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " appearances"});
       }
       else{
         //if the current artist is bigger than the smallest artist of the biggest artists,
@@ -56,13 +56,13 @@ export default class ArtistPieGraph extends Component {
         var smallestArtist = biggestArtistList[4];
         if(numSongs > smallestArtist["y"]){
           biggestArtistList.pop();
-          biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
+          biggestArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " appearances"});
           smallerArtistList.push(smallestArtist);
           
           biggestArtistList.sort(compare);
         }
         else{
-          smallerArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " songs"});
+          smallerArtistList.push({x: nameArtist, y: numSongs, label: nameArtist + ", " + numSongs + " appearances"});
         }
       }
       //data.push({x: key, y: artistToSongMapVar[key].length});
@@ -75,7 +75,7 @@ export default class ArtistPieGraph extends Component {
     var numOther = 0;
     smallerArtistList.forEach(obj => {numOther += obj.y});
     if(numOther != 0){
-        data.push({x: "Other", y: numOther, label: "Other, " + numOther + " songs"});
+        data.push({x: "Other", y: numOther, label: "Other, " + numOther + " appearances"});
         legendData.push({name: "Other"});
     }
     console.log(legendData);
@@ -86,10 +86,21 @@ export default class ArtistPieGraph extends Component {
     const chartData = this.popularArtistPieChart();
     return (
       <div>
-        <svg viewBox="0 0 600 400" style={{overflow:"visible"}}>
+        <svg viewBox="0 0 800 400" style={{overflow:"visible"}}>
+            <VictoryLegend standalone={false}
+                title="Legend"
+                centerTitle
+                x={80} y={80}
+                width={50} height={200}
+                padding={{top: 100, bottom: 100, left: 10}}
+                borderPadding={{ left: 15, right: 20 }}
+                colorScale={["tomato", "orange", "gold", "lightblue", "darkorchid", "lightgreen"]}
+                style={{ border: { stroke: "black" }, }}
+                data={chartData[1]}
+            /> 
             <VictoryPie standalone={false}
-                padding={{ top: 50, bottom: 50, left: 100, right: -300}}
-                width={400} height={350}
+                padding={{ top: 50, bottom: 50, left: 100, right: -400}}
+                width={500} height={450}
                 colorScale={["tomato", "orange", "gold", "lightblue", "darkorchid", "lightgreen"]}
                 labels={({datum}) => "a"}
                 labelComponent={
@@ -97,7 +108,7 @@ export default class ArtistPieGraph extends Component {
                     center
                     cornerRadius={0}
                     pointerLength={0}
-                    flyoutPadding={10}
+                    flyoutPadding={12}
                     flyoutStyle={{
                       stroke: "black",
                       fill: "white"
@@ -134,17 +145,7 @@ export default class ArtistPieGraph extends Component {
                   }
                 ]}
             />
-            <VictoryLegend standalone={false}
-                title="Legend"
-                centerTitle
-                x={20} y={80}
-                width={50} height={200}
-                padding={{top: 100, bottom: 100, left: 10}}
-                borderPadding={{ left: 15, right: 20 }}
-                colorScale={["tomato", "orange", "gold", "lightblue", "darkorchid", "lightgreen"]}
-                style={{ border: { stroke: "black" }, }}
-                data={chartData[1]}
-            />   
+              
       </svg>
       </div>
     );

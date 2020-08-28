@@ -9,42 +9,55 @@
     
     background-color: #14213D;;
 }
-.dataContainer {
+.AnalysisPageBody{
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0px;
+    padding: 0px;
+    max-height: 80vh;
+    border: 2px solid black;
+    
+    overflow: visible;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
+    0 9px 28px 8px rgba(0, 0, 0, 0.15);
+}
+.tabContainer {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    width: 80vw;
-    height: 90%;
+    height: calc(80vh + 40px);
+    width: calc(10vw + 40px);
+    background-color: #E5E5E5;
+}
+.tabContainer > Button {
+    width: 100%;
+    height: 15%;
+    font-size: 32px;
+    padding: 10px;
+    font-family: 'Open Sans';
+    font-weight: 550;
+}
+.dataContainer {
+    display: inline-block;
+    width: 70vw;
+    height: 80vh;
 }
 .songPlotContainer {
     background-color: white;
-    height: 40px;
-    width: 60vw;
-    padding: 1em 1em calc(40vw + 8em) 1em;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
-    0 9px 28px 8px rgba(0, 0, 0, 0.15);
-    border: rgb(30, 30, 30) 2px; 
-    border-style: solid;
-    border-radius: 10px;
+    height: 80vh; 
+    width: 100% - 40px;
+    padding: 20px;
 }
 .popularArtistChartContainer {
     background-color: white;
-    height: 40px; /* This is the height of the card title */
-    /* To maintain the 600:400 aspect ratio of the viewbox of the svg, have width
-    be the horizontal aspect, and padding bottom be the vertical aspect*/
-    width: 60vw;
-    padding: 1vw 1vw 42vw 1vw;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
-    0 9px 28px 8px rgba(0, 0, 0, 0.15);
-    border: rgb(30, 30, 30) 2px; 
-    border-style: solid;
-    border-radius: 10px;
+    height: 80vh; 
+    width: 100% - 40px;
+    padding: 20px;
 }
 .dataCardHeader {
     color: black;
     font-size: 40px;
-    line-height: 0%;
 }
 .loading-text {
     color: white;

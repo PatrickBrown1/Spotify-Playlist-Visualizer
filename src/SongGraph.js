@@ -151,8 +151,8 @@ export default class SongGraph extends Component {
         <VictoryChart
             theme={VictoryTheme.material}
             domain={domainObj}
-            width={600}
-            height={400}
+            width={this.props.width}
+            height={this.props.height}
         >
             <VictoryScatter
                 style={{ data: { fill: "#c43a31" } }}
@@ -204,8 +204,8 @@ export default class SongGraph extends Component {
               crossAxis
               domain={domainObj.x}
               label={this.state.domain}
-              width={600}
-              height={400}
+              width={this.props.width}
+              height={this.props.height}
               standalone={false}
               axisLabelComponent={<VictoryLabel dy={20} />}
             />
@@ -213,8 +213,8 @@ export default class SongGraph extends Component {
               dependentAxis
               domain={domainObj.y}
               label={this.state.range}
-              width={600}
-              height={400}
+              width={this.props.width}
+              height={this.props.height}
               standalone={false}
               axisLabelComponent={<VictoryLabel dy={-30} />}
             />

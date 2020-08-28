@@ -6,13 +6,17 @@ import "./AnalysisPage.css";
 import SongGraph from "../SongGraph.js"
 import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
+import { Button } from "antd";
 
 import BarLoader from "react-spinners/BarLoader";
 
 export default class AnalysisPage extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      width: 0,
+      height: 0
+    };
     //filtered list of playlists will be passed into props as
     //filteredPlaylists
     this.getAllSongs = getAllSongs.bind(this);
@@ -21,6 +25,11 @@ export default class AnalysisPage extends Component {
     this.calculateMostPopularGenre = this.calculateMostPopularGenre.bind(this);
     this.createArtistToSongMap = this.createArtistToSongMap.bind(this);
     this.createAnalysisArray = this.createAnalysisArray.bind(this);
+    this.handleTabSwitch = this.handleTabSwitch.bind(this);
+    this.renderTab = this.renderTab.bind(this);
+    this.renderPopularArtistTab = this.renderPopularArtistTab.bind(this);
+    this.renderSongScatterTab = this.renderSongScatterTab.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
   componentWillMount (){
     this.setState({loading: true});
@@ -35,6 +44,8 @@ export default class AnalysisPage extends Component {
     //4. Create the artist to song map, set state.
 
     //1
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     var allSongs = await this.createSongArray(this.props.filteredPlaylists);
     console.log(allSongs);
     //let [someResult, anotherResult] = await Promise.all([someCall(), anotherCall()]);
@@ -51,9 +62,15 @@ export default class AnalysisPage extends Component {
     //4
     this.setState({artistToSongMap: this.createArtistToSongMap(allSongs),
                    allSongsArray: allSongs,
-                  loading: false});
+                  loading: false,
+                  currentTab: "songScatter"});
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
   async createSongArray(playlists) {
     /*
         This function will return an array of all of the songs in all of the playlists
@@ -142,7 +159,43 @@ export default class AnalysisPage extends Component {
       console.log(song.name);
     });
   }
+  handleTabSwitch(pageName) {
+    this.setState({currentTab: pageName});
+  }
+  renderTab(){
+    const tabName = this.state.currentTab;
+    if(tabName === "songScatter"){
+      return this.renderSongScatterTab();
+    }
+    else if(tabName === "popularArtists"){
+      return this.renderPopularArtistTab();
+    }
+  }
+  renderPopularArtistTab(){
+    const divHeight = (this.state.height * 0.8 - 40) * 0.9;
+    const divWidth = this.state.width * 0.7;
+    return (
+      <div className="popularArtistChartContainer">
+        <h1 className="dataCardHeader">Most Popular Artists</h1>
+        <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
+      </div>
+    );
+  }
+  renderSongScatterTab(){
+    //will calculate the size of the container that SongGraph is being rendered into
+    //because the dynamic sizing of Victory Graphs is not working properly
+    const divHeight = (this.state.height * 0.8 - 40) * 0.9;
+    const divWidth = this.state.width * 0.7;
+    return (
+      <div className="songPlotContainer">
+        <h1 className="dataCardHeader">See all your songs!</h1>
+        <SongGraph width={divWidth} height={divHeight} 
+        allSongsArray={this.state.allSongsArray}/>
+      </div>
+    );
+  }
   render() {
+    const dataPage = this.renderTab();
     return (
       <div className="AnalysisPage">
         {this.state.loading === true && (
@@ -162,7 +215,22 @@ export default class AnalysisPage extends Component {
           </div>
         )}
         {this.state.loading === false && (
-          <div className="dataContainer">
+          <div className="AnalysisPageBody">
+            <div className="tabContainer">
+              <Button onClick={() => this.handleTabSwitch("songScatter")}>Song Scatter</Button>
+              <Button onClick={() => this.handleTabSwitch("popularArtists")}>Artist Pie Chart</Button>
+              <Button>Songs List</Button>
+            </div>
+            <div className="dataContainer">
+              {dataPage}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+/*<div className="dataContainer">
             <div className="songPlotContainer">
               <h1 className="dataCardHeader">See all your songs!</h1>
               <SongGraph allSongsArray={this.state.allSongsArray}/>
@@ -171,9 +239,4 @@ export default class AnalysisPage extends Component {
               <h1 className="dataCardHeader">Most Popular Artists</h1>
               <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
             </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+          </div>*/
