@@ -8,6 +8,7 @@ import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
 import { Button } from "antd";
 
+import SongTable from "../SongTable.js"
 import BarLoader from "react-spinners/BarLoader";
 
 export default class AnalysisPage extends Component {
@@ -30,6 +31,7 @@ export default class AnalysisPage extends Component {
     this.renderPopularArtistTab = this.renderPopularArtistTab.bind(this);
     this.renderSongScatterTab = this.renderSongScatterTab.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.renderSongChart = this.renderSongChart.bind(this);
   }
   componentWillMount (){
     this.setState({loading: true});
@@ -170,6 +172,9 @@ export default class AnalysisPage extends Component {
     else if(tabName === "popularArtists"){
       return this.renderPopularArtistTab();
     }
+    else{
+      return this.renderSongChart();
+    }
   }
   renderPopularArtistTab(){
     const divHeight = (this.state.height * 0.8 - 40) * 0.9;
@@ -191,6 +196,13 @@ export default class AnalysisPage extends Component {
         <h1 className="dataCardHeader">See all your songs!</h1>
         <SongGraph width={divWidth} height={divHeight} 
         allSongsArray={this.state.allSongsArray}/>
+      </div>
+    );
+  }
+  renderSongChart(){
+    return (
+      <div className="songChartContainer">
+        <SongTable songList={this.state.allSongsArray}/>
       </div>
     );
   }
@@ -219,7 +231,7 @@ export default class AnalysisPage extends Component {
             <div className="tabContainer">
               <Button onClick={() => this.handleTabSwitch("songScatter")}>Song Scatter</Button>
               <Button onClick={() => this.handleTabSwitch("popularArtists")}>Artist Pie Chart</Button>
-              <Button>Songs List</Button>
+              <Button onClick={() => this.handleTabSwitch("songList")}>Songs List</Button>
             </div>
             <div className="dataContainer">
               {dataPage}

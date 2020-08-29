@@ -195,9 +195,10 @@ export async function getAllSongs(token, first_page){
   console.log(all_songs_playlist);
   return all_songs_playlist;
 }
-export async function getSongObjects(token, songArray){
+export async function getSongObjects(token, songArrayVar){
   //need to parse the array into comma separated lists of max length 100 songs,
   console.log("GETTING SONG OBJECTS");
+  var songArray = songArrayVar.slice();
   var song_object_list = [];
   var call_link = "https://api.spotify.com/v1/audio-features";
   var songs_left = true;

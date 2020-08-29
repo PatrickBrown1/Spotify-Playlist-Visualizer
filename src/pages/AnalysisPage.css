@@ -55,6 +55,12 @@
     width: 100% - 40px;
     padding: 20px;
 }
+.songChartContainer {
+    background-color: white;
+    height: 80vh; 
+    width: 100% - 40px;
+    padding: 20px;
+}
 .dataCardHeader {
     color: black;
     font-size: 40px;

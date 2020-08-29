@@ -24,6 +24,7 @@ export default class HomePage extends Component {
 
   }
   render() {
+
     return (
       <div class="grid-container">
         <div class="item white-bg"></div>
