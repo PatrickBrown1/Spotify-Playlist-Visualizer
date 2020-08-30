@@ -91,7 +91,7 @@ function EnhancedTableHeader(props) {
       id: "songname",
       displayLabel: "Song Name",
     },
-    { id: "artist", displayLabel: "Artist(s)" },
+    { id: "artists", displayLabel: "Artist(s)" },
     { id: "album", displayLabel: "Album" },
     { id: "acousticness", displayLabel: "Acousticness" },
     { id: "danceability", displayLabel: "Danceability" },
@@ -113,6 +113,7 @@ function EnhancedTableHeader(props) {
           <TableCell
             key={header.id}
             sortDirection={orderBy === header.id ? order : false}
+            align="right"
           >
             <TableSortLabel
               active={orderBy === header.id}
