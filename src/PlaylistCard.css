@@ -1,80 +1,57 @@
 .card {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    
-    width: 34vw;
-    height: 17vw;
-    margin: 10px 0 10px 0;
-    
-    background-color: white;
-    transition: box-shadow 0.2s;
-
-    opacity: 1;
-    filter: grayscale(0%);
-
-
-
-    border: rgb(30, 30, 30) 2px;
-    border-style: solid;
-    border-radius: 10px;
-    overflow: hidden;
+  display: flex;
+  background-color: green;
+  transition: box-shadow 0.2s;
+  height: 17vw;
+  width: 34vw;
+  opacity: 1;
+  filter: grayscale(0%);
+  
 }
 .card:hover {
-    transition: box-shadow 0.2s;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 6px 16px 0 rgba(0, 0, 0, 0.24),
-    0 9px 28px 8px rgba(0, 0, 0, 0.15);
-}
-.image-container {
-    background-color: blue;
-    height: 100%;
-    width: 17vw;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.36),
+    0 6px 16px 0 rgba(0, 0, 0, 0.24), 0 9px 28px 8px rgba(0, 0, 0, 0.15);
 }
 .text-container {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-}
-.text-container > h1 {
-    padding: 0 3px 0 3px;
-    color: rgb(30, 30, 30);
-    font-weight: 700;
-    font-size:calc(50% + 1vw);
-    text-decoration: underline;
-}
-.text-container > h2 {
-    color: rgb(30, 30, 30);
-    font-weight: 500;
-    font-size:calc(50% + 0.7vw);
+  display: flex 1 0 auto;
+  flex-direction: column;
+  width: 17vw;
+  height: 17vw;
+  padding: 0;
+  margin: 0;
 }
 .album-image {
-    display: block;
-    min-height: 100%;
-    min-width: 100%;
-    max-width: 100%;
-    max-height: 100%;
+    
+    min-height: 17vw;
+    min-width: 17vw;
+    max-height: 17vw;
+    max-width: 17vw;
 }
-.divider{
-    border: rgb(30, 30, 30) 1px;
-    border-style: solid;
+.text-container > h1 {
+  padding: 0 3px 0 3px;
+  color: rgb(30, 30, 30);
+  font-weight: 700;
+  font-size: calc(50% + 1vw);
+  text-decoration: underline;
+}
+.text-container > h2 {
+  color: rgb(30, 30, 30);
+  font-weight: 500;
+  font-size: calc(50% + 0.7vw);
 }
 .opacitygrayscale {
-    opacity: 0.4;
-    filter: grayscale(70%);
-  }
-.title-container{
-    border-bottom: 2px solid black;
-    color: black;
-    width: 100%;
-    padding: 5px 0 10px 0;
+  opacity: 0.4;
+  filter: grayscale(70%);
 }
-.info-container{
-    padding-left: 20px;
-    text-align: justify;
-    color: black;
-    width: 100%;
-    font-size: 18px;
+.title-container {
+  border-bottom: 2px solid black;
+  color: black;
+  width: 100%;
+}
+.info-container {
+  text-align: center;
+  color: black;
+  width: 100%;
+  font-size: 18px;
 }

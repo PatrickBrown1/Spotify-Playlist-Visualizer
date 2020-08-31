@@ -5,7 +5,8 @@ import axios from "axios";
 import PlaylistCard from "../PlaylistCard.js";
 import "./DataPage.css";
 import { getUserInformation, getPlaylistNames } from "../APIHandler.js";
-
+import Grid from '@material-ui/core/Grid';
+import { sizing } from '@material-ui/system';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Button } from "antd";
 import AnalysisPage from "./AnalysisPage.js";
@@ -100,14 +101,21 @@ export default class DataPage extends Component {
     //this method is only called from the render method
     //a precursor to the call is the existence of playlist data
     //therefore this method should always have playlist data to work with
-    const cardList = this.state.playlists.map((playlistObj) => (
-      <PlaylistCard
-        playlistObject={playlistObj}
-        toBeUsed={playlistObj.toBeUsed}
-        handleCardClick={this.handleCardClick}
-      />
-    ));
-    return cardList;
+    return (
+      <Grid container justify="center" spacing={3}>
+        {
+          this.state.playlists.map((playlistObj) => (
+            <Grid item xs={6}>
+              <PlaylistCard 
+                playlistObject={playlistObj}
+                toBeUsed={playlistObj.toBeUsed}
+                handleCardClick={this.handleCardClick}
+              />  
+            </Grid>
+          ))
+        }
+      </Grid>
+    );
   }
   handleCardClick(id) {
     //find playlist with the correct id
