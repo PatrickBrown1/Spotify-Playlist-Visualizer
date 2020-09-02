@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { VictoryTheme, VictoryScatter, VictoryChart, VictoryLabel, VictoryAxis } from "victory";
-import "./SongGraph.css";
 
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
@@ -131,6 +130,13 @@ import { makeStyles } from '@material-ui/core/styles';
         alignItems: 'center',
         width: '50%',
       },
+      dropDown: {
+        height: "10%",
+        width: "40%"
+      },
+      labelText: {
+        pointerEvents: "none",
+      },
       graphDiv: {
         height: '68vh',
       }
@@ -138,6 +144,7 @@ import { makeStyles } from '@material-ui/core/styles';
     const classes = useStyles();
     const [domain, setDomain] = React.useState("danceability");
     const [range, setRange] = React.useState("energy");
+    const [updateView, setUpdateView] = React.useState("");
 
     var domainObj = calculateDomain(domain, range);
     const options = [
@@ -157,12 +164,12 @@ import { makeStyles } from '@material-ui/core/styles';
         </div>
         <div className={classes.dropdownDiv}>
           <div className={classes.dropdownItem} >
-            <h2 className="header-text">Domain (x)</h2>
-            <Dropdown className="drop-down" options={options} onChange={onSelectX} value={domain} placeholder="Select an option" />
+            <h2>Domain (x)</h2>
+            <Dropdown className={classes.dropDown} options={options} onChange={onSelectX} value={domain} placeholder="Select an option" />
           </div>
           <div className={classes.dropdownItem} >
-            <h2 className="header-text">Range (Y)</h2>
-            <Dropdown className="drop-down" options={options} onChange={onSelectY} value={range} placeholder="Select an option" />
+            <h2>Range (Y)</h2>
+            <Dropdown className={classes.dropDown} options={options} onChange={onSelectY} value={range} placeholder="Select an option" />
           </div>
         </div>
         <VictoryChart
@@ -176,7 +183,7 @@ import { makeStyles } from '@material-ui/core/styles';
                 size={7}
                 data={createChartData(domain, range, props)}
                 labels={({datum}) => ""}
-                labelComponent={<VictoryLabel className="label-text"/>}
+                labelComponent={<VictoryLabel className={classes.labelText}/>}
                 events={[
                   {
                     target: "data",
@@ -185,12 +192,14 @@ import { makeStyles } from '@material-ui/core/styles';
                         return [{
                           target: "labels",
                           mutation: (props) => {
+                            setUpdateView("a");
                             console.log(props);
                             return {text: props.datum.label_text};
                           }
                         }, {
                           target: "data",
                           mutation: (props) => {
+                            setUpdateView("b");
                             return { style: {fill: "#dc625a" }};
                           }
                         }];
@@ -199,12 +208,14 @@ import { makeStyles } from '@material-ui/core/styles';
                         return [{
                           target: "labels",
                           mutation: (props) => {
-                            return {text: ""};
+                            setUpdateView("");
+                            return {text: "c"};
                           }
                         },
                         {
                           target: "data",
                           mutation: (props) => {
+                            setUpdateView("d");
                             return null;
                           }
                         }];
