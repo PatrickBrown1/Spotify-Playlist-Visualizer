@@ -160,11 +160,11 @@ export default function SongTable(props) {
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row) => (
               <TableRow hover key={row.songname}>
-                <TableCell component="th" scope="row">
+                <TableCell align="right" component="th" scope="row">
                   {row.songname}
                 </TableCell>
-                <TableCell align="left">{row.artists}</TableCell>
-                <TableCell align="left">{row.album}</TableCell>
+                <TableCell align="right">{row.artists}</TableCell>
+                <TableCell align="right">{row.album}</TableCell>
                 <TableCell align="right">{row.acousticness}</TableCell>
                 <TableCell align="right">{row.danceability}</TableCell>
                 <TableCell align="right">{row.energy}</TableCell>

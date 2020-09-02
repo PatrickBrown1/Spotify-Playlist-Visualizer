@@ -8,6 +8,7 @@ import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
 import Button from '@material-ui/core/Button';
 
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SongTable from "../SongTable.js"
@@ -183,7 +184,9 @@ export default class AnalysisPage extends Component {
     const divWidth = this.state.width * 0.7;
     return (
       <div className="popularArtistChartContainer">
-        <h1 className="dataCardHeader">Most Popular Artists</h1>
+        <Typography className="dataCardHeader" align='center' component='h1' variant='h2'>
+          Most Popular Artists
+        </Typography>
         <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
       </div>
     );
@@ -243,13 +246,3 @@ export default class AnalysisPage extends Component {
     );
   }
 }
-/*<div className="dataContainer">
-            <div className="songPlotContainer">
-              <h1 className="dataCardHeader">See all your songs!</h1>
-              <SongGraph allSongsArray={this.state.allSongsArray}/>
-            </div>
-            <div className="popularArtistChartContainer">
-              <h1 className="dataCardHeader">Most Popular Artists</h1>
-              <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
-            </div>
-          </div>*/

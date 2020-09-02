@@ -6,6 +6,7 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -132,7 +133,8 @@ import { makeStyles } from '@material-ui/core/styles';
       },
       dropDown: {
         height: "10%",
-        width: "40%"
+        width: "40%",
+        pointerEvents: "default",
       },
       labelText: {
         pointerEvents: "none",
@@ -160,15 +162,21 @@ import { makeStyles } from '@material-ui/core/styles';
     return (
       <Box className={classes.root}>
         <div className={classes.titleDiv}>
-          <h1>See all your songs!</h1>
+          <Typography align='center' color='black' variant="h2" component="h1">
+            Song Graph
+          </Typography>
         </div>
         <div className={classes.dropdownDiv}>
           <div className={classes.dropdownItem} >
-            <h2>Domain (x)</h2>
+            <Typography align='center' color='black' variant="h4" component="h2">
+              Domain (x)
+            </Typography>
             <Dropdown className={classes.dropDown} options={options} onChange={onSelectX} value={domain} placeholder="Select an option" />
           </div>
           <div className={classes.dropdownItem} >
-            <h2>Range (Y)</h2>
+            <Typography align='center' color='black' variant="h4" component="h2">
+              Range (y)
+            </Typography>
             <Dropdown className={classes.dropDown} options={options} onChange={onSelectY} value={range} placeholder="Select an option" />
           </div>
         </div>
@@ -208,8 +216,8 @@ import { makeStyles } from '@material-ui/core/styles';
                         return [{
                           target: "labels",
                           mutation: (props) => {
-                            setUpdateView("");
-                            return {text: "c"};
+                            setUpdateView("c");
+                            return {text: ""};
                           }
                         },
                         {
