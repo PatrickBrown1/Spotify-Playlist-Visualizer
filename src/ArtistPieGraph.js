@@ -2,6 +2,9 @@ import React, { Component } from "react";
 
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default class ArtistPieGraph extends Component {
   constructor(props) {

@@ -6,7 +6,10 @@ import "./AnalysisPage.css";
 import SongGraph from "../SongGraph.js"
 import ArtistPieGraph from "../ArtistPieGraph.js"
 import _ from "lodash";
-import { Button } from "antd";
+import Button from '@material-ui/core/Button';
+
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
 import SongTable from "../SongTable.js"
 import BarLoader from "react-spinners/BarLoader";
@@ -181,7 +184,9 @@ export default class AnalysisPage extends Component {
     const divWidth = this.state.width * 0.7;
     return (
       <div className="popularArtistChartContainer">
-        <h1 className="dataCardHeader">Most Popular Artists</h1>
+        <Typography className="dataCardHeader" align='center' component='h1' variant='h2'>
+          Most Popular Artists
+        </Typography>
         <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
       </div>
     );
@@ -193,7 +198,6 @@ export default class AnalysisPage extends Component {
     const divWidth = this.state.width * 0.7;
     return (
       <div className="songPlotContainer">
-        <h1 className="dataCardHeader">See all your songs!</h1>
         <SongGraph width={divWidth} height={divHeight} 
         allSongsArray={this.state.allSongsArray}/>
       </div>
@@ -229,9 +233,9 @@ export default class AnalysisPage extends Component {
         {this.state.loading === false && (
           <div className="AnalysisPageBody">
             <div className="tabContainer">
-              <Button onClick={() => this.handleTabSwitch("songScatter")}>Song Scatter</Button>
-              <Button onClick={() => this.handleTabSwitch("popularArtists")}>Artist Pie Chart</Button>
-              <Button onClick={() => this.handleTabSwitch("songList")}>Songs List</Button>
+              <Button variant="contained" color="primary" onClick={() => this.handleTabSwitch("songScatter")}>Song Scatter</Button>
+              <Button variant="contained" color="primary" onClick={() => this.handleTabSwitch("popularArtists")}>Artist Pie Chart</Button>
+              <Button variant="contained" color="primary" onClick={() => this.handleTabSwitch("songList")}>Songs List</Button>
             </div>
             <div className="dataContainer">
               {dataPage}
@@ -242,13 +246,3 @@ export default class AnalysisPage extends Component {
     );
   }
 }
-/*<div className="dataContainer">
-            <div className="songPlotContainer">
-              <h1 className="dataCardHeader">See all your songs!</h1>
-              <SongGraph allSongsArray={this.state.allSongsArray}/>
-            </div>
-            <div className="popularArtistChartContainer">
-              <h1 className="dataCardHeader">Most Popular Artists</h1>
-              <ArtistPieGraph artistToSongMap={this.state.artistToSongMap} />
-            </div>
-          </div>*/

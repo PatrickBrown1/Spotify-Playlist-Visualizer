@@ -96,10 +96,10 @@ function EnhancedTableHeader(props) {
     { id: "acousticness", displayLabel: "Acousticness" },
     { id: "danceability", displayLabel: "Danceability" },
     { id: "energy", displayLabel: "Energy" },
-    { id: "instumentalness", displayLabel: "Instumentalness" },
+    { id: "instrumentalness", displayLabel: "instrumentalness" },
     { id: "liveness", displayLabel: "Liveness" },
     { id: "loudness", displayLabel: "Loudness" },
-    { id: "speachiness", displayLabel: "Speachiness" },
+    { id: "speechiness", displayLabel: "Speechiness" },
     { id: "valence", displayLabel: "Valence" },
     { id: "tempo", displayLabel: "Tempo" },
   ];
@@ -160,7 +160,7 @@ export default function SongTable(props) {
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row) => (
               <TableRow hover key={row.songname}>
-                <TableCell component="th" scope="row">
+                <TableCell align="right" component="th" scope="row">
                   {row.songname}
                 </TableCell>
                 <TableCell align="right">{row.artists}</TableCell>

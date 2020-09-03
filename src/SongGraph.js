@@ -1,43 +1,22 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { VictoryTheme, VictoryScatter, VictoryChart, VictoryLabel, VictoryAxis } from "victory";
-import "./SongGraph.css";
 
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
-export default class SongGraph extends Component {
-  constructor(props) {
-    super();
-    this.state = {
-      domain: "danceability",
-      range: "energy",
-    };
-    this.createChartData = this.createChartData.bind(this);
-    this.calculateDomain = this.calculateDomain.bind(this);
-    this._onSelectX = this._onSelectX.bind(this)
-    this._onSelectY = this._onSelectY.bind(this)
-  }
-  _onSelectX (option) {
-    console.log('You selected domain ', option.label);
-    this.setState({domain: option.value});
-  }
-  _onSelectY (option) {
-    console.log('You selected range', option.label);
-    this.setState({range: option.value});
-  }
-  componentDidMount() {
-  }
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-  componentWillUnmount() {
 
-  }
-  createChartData(domain, range){
+  
+  function createChartData(domain, range, props){
     var dataset = [];
     var domainName = domain;
     var rangeName = range;
     //need to create a data set with x and y
-    this.props.allSongsArray.forEach(songObj => {
+    props.allSongsArray.forEach(songObj => {
       if(songObj === undefined){
         console.log("undefined");
         console.log(songObj);
@@ -62,7 +41,7 @@ export default class SongGraph extends Component {
     });
     return dataset;
   }
-  calculateDomain(domain, range){
+  function calculateDomain(domain, range){
     var domainObj = {};
     var domainName = domain;
     var rangeName = range;
@@ -130,36 +109,89 @@ export default class SongGraph extends Component {
     }
     return domainObj;
   }
-  render() {
-    var domainName = this.state.domain;
-    var rangeName = this.state.range;
-    var domainObj = this.calculateDomain(domainName, rangeName);
+  export default function SongGraph(props){
+    const useStyles = makeStyles((theme) => ({
+      root: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '80vh',
+        color: 'black',
+      },
+      titlediv: {
+        height: '5vh',
+      },
+      dropdownDiv: {
+        display: "flex",
+        flexDirection: 'row',
+        height: '7vh',
+      },
+      dropdownItem: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '50%',
+      },
+      dropDown: {
+        height: "10%",
+        width: "40%",
+        pointerEvents: "default",
+      },
+      labelText: {
+        pointerEvents: "none",
+      },
+      graphDiv: {
+        height: '68vh',
+      }
+    }));
+    const classes = useStyles();
+    const [domain, setDomain] = React.useState("danceability");
+    const [range, setRange] = React.useState("energy");
+    const [updateView, setUpdateView] = React.useState("");
+
+    var domainObj = calculateDomain(domain, range);
     const options = [
       'acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness',
       'loudness', 'speechiness', 'valence', 'tempo'
     ];    
+    const onSelectX = (option) => {
+      setDomain(option.value);
+    }
+    const onSelectY = (option) => {
+      setRange(option.value);
+    }
     return (
-      <div>
-        <div className="text-div">
-          <h2 className="header-text">Domain (x)</h2>
-          <h2 className="header-text">Range (Y)</h2>
+      <Box className={classes.root}>
+        <div className={classes.titleDiv}>
+          <Typography align='center' color='black' variant="h2" component="h1">
+            Song Graph
+          </Typography>
         </div>
-        <div className="dropdown-div">
-          <Dropdown className="drop-down" options={options} onChange={this._onSelectX} value={domainName} placeholder="Select an option" />
-          <Dropdown className="drop-down" options={options} onChange={this._onSelectY} value={rangeName} placeholder="Select an option" />
+        <div className={classes.dropdownDiv}>
+          <div className={classes.dropdownItem} >
+            <Typography align='center' color='black' variant="h4" component="h2">
+              Domain (x)
+            </Typography>
+            <Dropdown className={classes.dropDown} options={options} onChange={onSelectX} value={domain} placeholder="Select an option" />
+          </div>
+          <div className={classes.dropdownItem} >
+            <Typography align='center' color='black' variant="h4" component="h2">
+              Range (y)
+            </Typography>
+            <Dropdown className={classes.dropDown} options={options} onChange={onSelectY} value={range} placeholder="Select an option" />
+          </div>
         </div>
         <VictoryChart
             theme={VictoryTheme.material}
             domain={domainObj}
-            width={this.props.width}
-            height={this.props.height}
+            width={props.width}
+            height={props.height}
         >
             <VictoryScatter
                 style={{ data: { fill: "#c43a31" } }}
                 size={7}
-                data={this.createChartData(domainName, rangeName)}
+                data={createChartData(domain, range, props)}
                 labels={({datum}) => ""}
-                labelComponent={<VictoryLabel className="label-text"/>}
+                labelComponent={<VictoryLabel className={classes.labelText}/>}
                 events={[
                   {
                     target: "data",
@@ -168,14 +200,14 @@ export default class SongGraph extends Component {
                         return [{
                           target: "labels",
                           mutation: (props) => {
-                            this.setState({A: "a"});
+                            setUpdateView("a");
                             console.log(props);
                             return {text: props.datum.label_text};
                           }
                         }, {
                           target: "data",
                           mutation: (props) => {
-                            this.setState({A: "a"});
+                            setUpdateView("b");
                             return { style: {fill: "#dc625a" }};
                           }
                         }];
@@ -184,14 +216,14 @@ export default class SongGraph extends Component {
                         return [{
                           target: "labels",
                           mutation: (props) => {
-                            this.setState({A: "a"});
+                            setUpdateView("c");
                             return {text: ""};
                           }
                         },
                         {
                           target: "data",
                           mutation: (props) => {
-                            this.setState({A: "a"});
+                            setUpdateView("d");
                             return null;
                           }
                         }];
@@ -203,23 +235,22 @@ export default class SongGraph extends Component {
             <VictoryAxis
               crossAxis
               domain={domainObj.x}
-              label={this.state.domain}
-              width={this.props.width}
-              height={this.props.height}
+              label={domain}
+              width={props.width}
+              height={props.height}
               standalone={false}
               axisLabelComponent={<VictoryLabel dy={20} />}
             />
             <VictoryAxis
               dependentAxis
               domain={domainObj.y}
-              label={this.state.range}
-              width={this.props.width}
-              height={this.props.height}
+              label={range}
+              width={props.width}
+              height={props.height}
               standalone={false}
               axisLabelComponent={<VictoryLabel dy={-30} />}
             />
         </VictoryChart>
-      </div>
+      </Box>
     );
   }
-}

@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
-import axios from "axios";
 import PlaylistCard from "../PlaylistCard.js";
 import "./DataPage.css";
 import { getUserInformation, getPlaylistNames } from "../APIHandler.js";
-
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Button } from "antd";
+
+import Grid from '@material-ui/core/Grid';
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import { sizing } from '@material-ui/system';
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
 import AnalysisPage from "./AnalysisPage.js";
 
 export default class DataPage extends Component {
@@ -100,14 +105,21 @@ export default class DataPage extends Component {
     //this method is only called from the render method
     //a precursor to the call is the existence of playlist data
     //therefore this method should always have playlist data to work with
-    const cardList = this.state.playlists.map((playlistObj) => (
-      <PlaylistCard
-        playlistObject={playlistObj}
-        toBeUsed={playlistObj.toBeUsed}
-        handleCardClick={this.handleCardClick}
-      />
-    ));
-    return cardList;
+    return (
+      <Grid container justify="center" align="center" spacing={3}>
+        {
+          this.state.playlists.map((playlistObj) => (
+            <Grid item xs={6}>
+              <PlaylistCard 
+                playlistObject={playlistObj}
+                toBeUsed={playlistObj.toBeUsed}
+                handleCardClick={this.handleCardClick}
+              />  
+            </Grid>
+          ))
+        }
+      </Grid>
+    );
   }
   handleCardClick(id) {
     //find playlist with the correct id
@@ -203,34 +215,50 @@ export default class DataPage extends Component {
                 <h1>You dont seem to be logged in to Spotify</h1>
                 <h3>Go back to the home page to log in</h3>
                 <Link to="/">
-                  <Button type="primary">Home</Button>
+                  <Button variant="contained" color="primary">Home</Button>
                 </Link>
               </div>
             
           </div>
         )}
         {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
-          <div>
+          <Box>
             <div className="above-playlist-container"> 
-              <h1>Pick some Playlists to Analyze</h1>
+              <Typography color='white' align="center" component='h1' variant='h2'>
+                Pick some Playlists to Analyze
+              </Typography>
             </div>
-            <div className="data-body">
-              <div className="sorting-button-container">
-                <h3>Filter Playlists</h3>
-                <Button className="filter-buttons" type="primary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
-                <Button className="filter-buttons" type="primary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
-                <Button className="filter-buttons" type="primary" onClick={() => this.selectOwnedPlaylists()}>Owned by Me</Button>
+            <Paper className="data-body" elevation={10}>
+              <Box className="sorting-button-container">
+                <Typography color="black" align="center" component="h3" variant="h3">
+                  Filter Playlists
+                </Typography>
+                <Box py={2}>
+                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
+                </Box>
+                <Box py={2}>
+                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
+                </Box>
+                <Box py={2}>
+                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectOwnedPlaylists()}>Owned by Me</Button>
+                </Box>
                 <div style={{marginTop: "auto"}}></div>
-                <h4>{numSelectedPlaylists} Playlists Selected</h4>
-                <h4>{numTotalPlaylists} Playlists Total</h4>
-              </div>
-              <div className="card-container">{cardList}</div>
-            </div>
+                <Typography color="black" align="center" component="h4" variant="subtitle1">
+                  {numSelectedPlaylists} Playlists Selected
+                </Typography>
+                <Typography color="black" align="center" component="h4" variant="subtitle1">
+                  {numTotalPlaylists} Playlists Total
+                </Typography>
+              </Box>
+              <Box className="card-container">
+                {cardList}
+              </Box>
+            </Paper>
             
-            <div className="footer">
-              <Button className="footer-button" type="primary" onClick={() => this.handleGoClick()}>Go</Button>
-            </div>
-          </div>
+            <Box className="footer">
+              <Button className="footer-button" variant="contained" color="primary" onClick={() => this.handleGoClick()}>Go</Button>
+            </Box>
+          </Box>
         )}
         {this.state.showAnalysis && this.state.token && (
           <AnalysisPage filteredPlaylists={this.filterPlaylists()} token={this.state.token}/>
