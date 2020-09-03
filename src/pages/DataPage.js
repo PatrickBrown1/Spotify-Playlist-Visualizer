@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { sizing } from '@material-ui/system';
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
@@ -223,11 +224,15 @@ export default class DataPage extends Component {
         {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
           <Box>
             <div className="above-playlist-container"> 
-              <h1>Pick some Playlists to Analyze</h1>
+              <Typography color='white' align="center" component='h1' variant='h2'>
+                Pick some Playlists to Analyze
+              </Typography>
             </div>
             <Paper className="data-body" elevation={10}>
               <Box className="sorting-button-container">
-                <h3>Filter Playlists</h3>
+                <Typography color="black" align="center" component="h3" variant="h3">
+                  Filter Playlists
+                </Typography>
                 <Box py={2}>
                   <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
                 </Box>
@@ -238,8 +243,12 @@ export default class DataPage extends Component {
                   <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectOwnedPlaylists()}>Owned by Me</Button>
                 </Box>
                 <div style={{marginTop: "auto"}}></div>
-                <h4>{numSelectedPlaylists} Playlists Selected</h4>
-                <h4>{numTotalPlaylists} Playlists Total</h4>
+                <Typography color="black" align="center" component="h4" variant="subtitle1">
+                  {numSelectedPlaylists} Playlists Selected
+                </Typography>
+                <Typography color="black" align="center" component="h4" variant="subtitle1">
+                  {numTotalPlaylists} Playlists Total
+                </Typography>
               </Box>
               <Box className="card-container">
                 {cardList}
