@@ -10,32 +10,28 @@ import Paper from "@material-ui/core/Paper";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 function descendingComparator(a, b, orderBy) {
-  if(orderBy === "songname" || orderBy === "artists"){
+  if (orderBy === "songname" || orderBy === "artists") {
     if (b[orderBy].localeCompare(a[orderBy]) < 0) {
       return -1;
-    }
-    else if(b[orderBy].localeCompare(a[orderBy]) > 0) {
+    } else if (b[orderBy].localeCompare(a[orderBy]) > 0) {
       return 1;
     }
     return 0;
-  }
-  else{
+  } else {
     if (b[orderBy] < a[orderBy]) {
       return -1;
-    }
-    else if (b[orderBy] > a[orderBy]) {
+    } else if (b[orderBy] > a[orderBy]) {
       return 1;
     }
     return 0;
   }
-  
 }
 
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -96,7 +92,7 @@ function EnhancedTableHeader(props) {
     { id: "acousticness", displayLabel: "Acousticness" },
     { id: "danceability", displayLabel: "Danceability" },
     { id: "energy", displayLabel: "Energy" },
-    { id: "instrumentalness", displayLabel: "instrumentalness" },
+    { id: "instrumentalness", displayLabel: "Instrumentalness" },
     { id: "liveness", displayLabel: "Liveness" },
     { id: "loudness", displayLabel: "Loudness" },
     { id: "speechiness", displayLabel: "Speechiness" },
@@ -136,9 +132,10 @@ EnhancedTableHeader.propTypes = {
 
 export default function SongTable(props) {
   const [rows, setRows] = React.useState(
-    props.songList.map( (songObj) => {
+    props.songList.map((songObj) => {
       return createData(songObj);
-  }));
+    })
+  );
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("songname");
 
