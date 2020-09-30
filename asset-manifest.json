@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Spotify-Playlist-Visualizer/static/css/main.ce07acf6.chunk.css",
-    "main.js": "/Spotify-Playlist-Visualizer/static/js/main.6a0a864e.chunk.js",
-    "main.js.map": "/Spotify-Playlist-Visualizer/static/js/main.6a0a864e.chunk.js.map",
+    "main.js": "/Spotify-Playlist-Visualizer/static/js/main.c4e28278.chunk.js",
+    "main.js.map": "/Spotify-Playlist-Visualizer/static/js/main.c4e28278.chunk.js.map",
     "runtime-main.js": "/Spotify-Playlist-Visualizer/static/js/runtime-main.2f2c67a3.js",
     "runtime-main.js.map": "/Spotify-Playlist-Visualizer/static/js/runtime-main.2f2c67a3.js.map",
     "static/css/2.ee241de9.chunk.css": "/Spotify-Playlist-Visualizer/static/css/2.ee241de9.chunk.css",
     "static/js/2.33878efd.chunk.js": "/Spotify-Playlist-Visualizer/static/js/2.33878efd.chunk.js",
     "static/js/2.33878efd.chunk.js.map": "/Spotify-Playlist-Visualizer/static/js/2.33878efd.chunk.js.map",
     "index.html": "/Spotify-Playlist-Visualizer/index.html",
-    "precache-manifest.fa686d9b2bd2bc7060180275a57a1c48.js": "/Spotify-Playlist-Visualizer/precache-manifest.fa686d9b2bd2bc7060180275a57a1c48.js",
+    "precache-manifest.d717b450c1b2c9c24e336ec279f88d3d.js": "/Spotify-Playlist-Visualizer/precache-manifest.d717b450c1b2c9c24e336ec279f88d3d.js",
     "service-worker.js": "/Spotify-Playlist-Visualizer/service-worker.js",
     "static/css/2.ee241de9.chunk.css.map": "/Spotify-Playlist-Visualizer/static/css/2.ee241de9.chunk.css.map",
     "static/css/main.ce07acf6.chunk.css.map": "/Spotify-Playlist-Visualizer/static/css/main.ce07acf6.chunk.css.map",
@@ -21,6 +21,6 @@
     "static/css/2.ee241de9.chunk.css",
     "static/js/2.33878efd.chunk.js",
     "static/css/main.ce07acf6.chunk.css",
-    "static/js/main.6a0a864e.chunk.js"
+    "static/js/main.c4e28278.chunk.js"
   ]
 }
