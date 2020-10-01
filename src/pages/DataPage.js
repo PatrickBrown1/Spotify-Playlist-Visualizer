@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
 import PlaylistCard from "../PlaylistCard.js";
 import "./DataPage.css";
 import { getUserInformation, getPlaylistNames } from "../APIHandler.js";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import Grid from '@material-ui/core/Grid';
+import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { sizing } from '@material-ui/system';
+import { sizing } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
@@ -107,17 +106,15 @@ export default class DataPage extends Component {
     //therefore this method should always have playlist data to work with
     return (
       <Grid container justify="center" align="center" spacing={3}>
-        {
-          this.state.playlists.map((playlistObj) => (
-            <Grid item xs={6}>
-              <PlaylistCard 
-                playlistObject={playlistObj}
-                toBeUsed={playlistObj.toBeUsed}
-                handleCardClick={this.handleCardClick}
-              />  
-            </Grid>
-          ))
-        }
+        {this.state.playlists.map((playlistObj) => (
+          <Grid item xs={6}>
+            <PlaylistCard
+              playlistObject={playlistObj}
+              toBeUsed={playlistObj.toBeUsed}
+              handleCardClick={this.handleCardClick}
+            />
+          </Grid>
+        ))}
       </Grid>
     );
   }
@@ -128,22 +125,21 @@ export default class DataPage extends Component {
     tempPlaylists.forEach((playlist) => {
       if (playlist.id === id) {
         //flip clicked boolean
-        if(playlist.toBeUsed === true){
+        if (playlist.toBeUsed === true) {
           //deselect playlist, decrement number of selected playlists
           numSelectedDelta = -1;
-        }
-        else{
+        } else {
           //select playlist, increment number of selected playlists
           numSelectedDelta = 1;
         }
         playlist.toBeUsed = !playlist.toBeUsed;
       }
     });
-    this.setState( (prevState) => { 
-      return{
-        playlists: tempPlaylists, 
+    this.setState((prevState) => {
+      return {
+        playlists: tempPlaylists,
         numSelectedPlaylists: prevState.numSelectedPlaylists + numSelectedDelta,
-      }
+      };
     });
   }
 
@@ -157,7 +153,10 @@ export default class DataPage extends Component {
       playlist.toBeUsed = true;
     });
     //set state to new playlist array
-    this.setState({ playlists: tempPlaylists, numSelectedPlaylists: tempPlaylists.length });
+    this.setState({
+      playlists: tempPlaylists,
+      numSelectedPlaylists: tempPlaylists.length,
+    });
   }
   deselectAllPlaylists() {
     //get playlist array from state and put into temp array
@@ -170,30 +169,32 @@ export default class DataPage extends Component {
     //set state to new playlist array
     this.setState({ playlists: tempPlaylists, numSelectedPlaylists: 0 });
   }
-  selectOwnedPlaylists(){
+  selectOwnedPlaylists() {
     var tempPlaylists = this.state.playlists;
     var playlistsIncluded = 0;
     //iterate through all non-owned playlists, set toBeUsed to false
     tempPlaylists.forEach((playlist) => {
-      if(playlist.owner.id !== this.state.user_info.id){
+      if (playlist.owner.id !== this.state.user_info.id) {
         playlist.toBeUsed = false;
-      }
-      else{
+      } else {
         playlist.toBeUsed = true;
         playlistsIncluded++;
       }
     });
     //set state to new playlist array
-    this.setState({ playlists: tempPlaylists, numSelectedPlaylists: playlistsIncluded });
+    this.setState({
+      playlists: tempPlaylists,
+      numSelectedPlaylists: playlistsIncluded,
+    });
   }
-  handleGoClick(){
-    this.setState({showAnalysis: true});
+  handleGoClick() {
+    this.setState({ showAnalysis: true });
   }
   //Iterates through all playlists, returns array of playlists that have been selected
-  filterPlaylists(){
+  filterPlaylists() {
     var filteredArray = [];
-    this.state.playlists.forEach(playlist => {
-      if(playlist.toBeUsed == true){
+    this.state.playlists.forEach((playlist) => {
+      if (playlist.toBeUsed == true) {
         filteredArray.push(playlist);
       }
     });
@@ -211,57 +212,109 @@ export default class DataPage extends Component {
       <div className="data-page-main">
         {!this.state.token && (
           <div className="error-header">
-              <div>
-                <h1>You dont seem to be logged in to Spotify</h1>
-                <h3>Go back to the home page to log in</h3>
-                <Link to="/">
-                  <Button variant="contained" color="primary">Home</Button>
-                </Link>
-              </div>
-            
+            <div>
+              <h1>You dont seem to be logged in to Spotify</h1>
+              <h3>Go back to the home page to log in</h3>
+              <Link to="/">
+                <Button variant="contained" color="primary">
+                  Home
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
-        {this.state.token && !this.state.no_playlist_data && !this.state.showAnalysis && (
-          <Box>
-            <div className="above-playlist-container"> 
-              <Typography color='white' align="center" component='h1' variant='h2'>
-                Pick some Playlists to Analyze
-              </Typography>
-            </div>
-            <Paper className="data-body" elevation={10}>
-              <Box className="sorting-button-container">
-                <Typography color="black" align="center" component="h3" variant="h3">
-                  Filter Playlists
+        {this.state.token &&
+          !this.state.no_playlist_data &&
+          !this.state.showAnalysis && (
+            <Box>
+              <div className="above-playlist-container">
+                <Typography
+                  color="white"
+                  align="center"
+                  component="h1"
+                  variant="h2"
+                >
+                  Pick some Playlists to Analyze
                 </Typography>
-                <Box py={2}>
-                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectAllPlaylists()}>Select All</Button>
+              </div>
+              <Paper className="data-body" elevation={10}>
+                <Box className="sorting-button-container">
+                  <Typography
+                    color="black"
+                    align="center"
+                    component="h3"
+                    variant="h3"
+                  >
+                    Filter Playlists
+                  </Typography>
+                  <Box py={2}>
+                    <Button
+                      className="filter-buttons"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.selectAllPlaylists()}
+                    >
+                      Select All
+                    </Button>
+                  </Box>
+                  <Box py={2}>
+                    <Button
+                      className="filter-buttons"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.deselectAllPlaylists()}
+                    >
+                      Remove All
+                    </Button>
+                  </Box>
+                  <Box py={2}>
+                    <Button
+                      className="filter-buttons"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => this.selectOwnedPlaylists()}
+                    >
+                      Owned by Me
+                    </Button>
+                  </Box>
+                  <div style={{ marginTop: "auto" }}></div>
+                  <Typography
+                    color="black"
+                    align="center"
+                    component="h4"
+                    variant="subtitle1"
+                  >
+                    {numSelectedPlaylists} Playlists Selected
+                  </Typography>
+                  <Typography
+                    color="black"
+                    align="center"
+                    component="h4"
+                    variant="subtitle1"
+                  >
+                    {numTotalPlaylists} Playlists Total
+                  </Typography>
                 </Box>
-                <Box py={2}>
-                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.deselectAllPlaylists()}>Remove All</Button>
-                </Box>
-                <Box py={2}>
-                  <Button className="filter-buttons" variant="contained" color="secondary" onClick={() => this.selectOwnedPlaylists()}>Owned by Me</Button>
-                </Box>
-                <div style={{marginTop: "auto"}}></div>
-                <Typography color="black" align="center" component="h4" variant="subtitle1">
-                  {numSelectedPlaylists} Playlists Selected
-                </Typography>
-                <Typography color="black" align="center" component="h4" variant="subtitle1">
-                  {numTotalPlaylists} Playlists Total
-                </Typography>
+                <Box className="card-container">{cardList}</Box>
+              </Paper>
+
+              <Box className="footer">
+                <Button
+                  className="footer-button"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => this.handleGoClick()}
+                >
+                  Go
+                </Button>
               </Box>
-              <Box className="card-container">
-                {cardList}
-              </Box>
-            </Paper>
-            
-            <Box className="footer">
-              <Button className="footer-button" variant="contained" color="primary" onClick={() => this.handleGoClick()}>Go</Button>
             </Box>
-          </Box>
-        )}
+          )}
         {this.state.showAnalysis && this.state.token && (
-          <AnalysisPage filteredPlaylists={this.filterPlaylists()} token={this.state.token}/>
+          <AnalysisPage
+            filteredPlaylists={this.filterPlaylists()}
+            token={this.state.token}
+          />
         )}
       </div>
     );

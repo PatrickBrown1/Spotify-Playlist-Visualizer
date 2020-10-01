@@ -1,15 +1,11 @@
 import React, { Component } from "react";
-import { authEndpoint, clientId, redirectUri, scopes } from "../config";
 import hash from "../hash";
-import axios from 'axios';
+import axios from "axios";
 import "./HomePage.css";
-import { Button } from 'antd';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { Button } from "antd";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { authEndpoint, clientId, redirectUri, scopes } from "../config.js";
+
 import RecordSVG from "../vinyl-record-svgrepo-com.svg";
 export default class HomePage extends Component {
   constructor() {
@@ -20,11 +16,8 @@ export default class HomePage extends Component {
     // Set token
   }
 
-  componentWillUnmount() {
-
-  }
+  componentWillUnmount() {}
   render() {
-
     return (
       <div class="grid-container">
         <div class="item white-bg"></div>
@@ -34,7 +27,7 @@ export default class HomePage extends Component {
         <div class="item navy-bg"></div>
         <div class="item white-bg"></div>
         <div class="item white-bg">
-          <div> 
+          <div>
             <h1 class="title-header">Playlist Analyzer</h1>
           </div>
           <div>
@@ -43,23 +36,28 @@ export default class HomePage extends Component {
         </div>
         <div class="circle-item">
           <div id="record-container">
-            <img 
+            <img
               id="record"
-              src={RecordSVG} 
+              src={RecordSVG}
               alt="record"
               height="90%"
-              width="90%" />
+              width="90%"
+            />
           </div>
         </div>
         <div class="item navy-bg"></div>
         <div class="item white-bg"></div>
         <div class="item white-bg">
           {!this.props.auth_token && (
-              <Button type="primary" className="main-button" href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+            <Button
+              type="primary"
+              className="main-button"
+              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
                 "%20"
-              )}&response_type=token&show_dialog=true`} >
-                Login to Spotify
-              </Button>
+              )}&response_type=token&show_dialog=true`}
+            >
+              Login to Spotify
+            </Button>
           )}
           {this.props.auth_token && (
             <Link to="/data">
